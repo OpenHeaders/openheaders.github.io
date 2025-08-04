@@ -1,0 +1,19 @@
+/* OpenHeaders Landing Page Styles */
+
+/* Base styles */
+@import url('styles/base.css');
+@import url('styles/typography.css');
+@import url('styles/layout.css');
+@import url('styles/animations.css');
+
+/* Components */
+@import url('styles/components/header.css');
+@import url('styles/components/buttons.css');
+@import url('styles/components/footer.css');
+@import url('styles/components/loading.css');
+
+/* Sections */
+@import url('styles/sections/hero.css');
+@import url('styles/sections/features.css');
+@import url('styles/sections/pricing.css');
+@import url('styles/sections/download.css');

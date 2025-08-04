@@ -1,0 +1,112 @@
+/* Button styles */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.btn-main-text {
+    display: block;
+    font-weight: 500;
+    font-size: 0.9375rem;
+}
+
+.btn-sub-text {
+    display: block;
+    font-size: 0.8125rem;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+.download-btn,
+.extension-btn {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: left;
+    padding: 0.875rem 1.5rem;
+    min-height: 52px;
+}
+
+.download-btn img,
+.extension-btn img {
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.download-btn > span,
+.extension-btn > span {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-primary:active::after {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-secondary {
+    background: var(--bg);
+    color: var(--text);
+    border: 2px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-secondary);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* Icon styles */
+.icon-inverted {
+    filter: brightness(0) invert(1);
+}
+
+.version-opacity {
+    opacity: 0.6;
+}
+
+/* Mobile buttons */
+@media (max-width: 768px) {
+    .btn {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+}

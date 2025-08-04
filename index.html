@@ -3,893 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenHeaders - Dynamic Local HTTP Header Management</title>
-    <meta name="description" content="The only HTTP header tool with dynamic values from files, env vars, and APIs. 100% local, no cloud, no tracking, truly open source. Desktop app + browser extension working completely offline.">
+    <title>OpenHeaders - Browser Development Toolkit</title>
+    <meta name="description" content="Record browser workflows, modify HTTP traffic, and collaborate with team workspaces. Open source, privacy-focused, runs offline, code signed (macOS+Windows).">
+    
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="logo.png">
-
-    <!-- Inter Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --primary: #3b82f6;
-            --primary-dark: #2563eb;
-            --secondary: #1e293b;
-            --text: #334155;
-            --text-light: #64748b;
-            --bg: #ffffff;
-            --bg-secondary: #f8fafc;
-            --border: #e2e8f0;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Smooth Scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            border-bottom: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--secondary);
-            text-decoration: none;
-        }
-
-        .logo img {
-            width: 32px;
-            height: 32px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        .github-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: white;
-            color: var(--text);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .github-link:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 8rem 0 4rem;
-            background: var(--bg-secondary);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-            animation: pulse 15s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.3; }
-        }
-
-        .hero-content {
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: var(--secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-            animation: fadeInUp 0.8s ease;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-light);
-            margin-bottom: 2.5rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            animation: fadeInUp 0.8s ease 0.2s both;
-        }
-
-        .privacy-badges {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            margin-bottom: 2.5rem;
-            flex-wrap: wrap;
-            animation: fadeInUp 0.8s ease 0.3s both;
-        }
-
-        .badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: white;
-            border-radius: 50px;
-            font-size: 0.875rem;
-            color: var(--success);
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            animation: fadeInUp 0.8s ease 0.4s both;
-        }
-
-        .btn {
-            padding: 0.75rem 2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--text);
-            border: 2px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Browser Extensions */
-        .browser-extensions {
-            margin-top: 3rem;
-            animation: fadeInUp 0.8s ease 0.6s both;
-        }
-
-        .extensions-label {
-            font-size: 0.875rem;
-            color: var(--text-light);
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .extension-links {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .extension-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            text-decoration: none;
-            color: var(--text);
-            font-size: 0.875rem;
-            transition: all 0.3s ease;
-        }
-
-        .extension-link:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .extension-link img {
-            width: 20px;
-            height: 20px;
-        }
-
-        /* Why OpenHeaders Section */
-        .why-section {
-            padding: 5rem 0;
-            background: white;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .comparison-card {
-            padding: 2rem;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .comparison-card.highlight {
-            background: var(--bg-secondary);
-            border: 2px solid var(--primary);
-            position: relative;
-        }
-
-        .comparison-card.highlight::before {
-            content: 'OpenHeaders';
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary);
-            color: white;
-            padding: 0.25rem 1rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
-
-        .comparison-card.competitor {
-            background: white;
-            border: 2px solid var(--border);
-        }
-
-        .comparison-card h3 {
-            font-size: 1.5rem;
-            color: var(--secondary);
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .feature-list {
-            list-style: none;
-        }
-
-        .feature-list li {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-        }
-
-        .check {
-            color: var(--success);
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
-
-        .cross {
-            color: #ef4444;
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
-
-        .warning {
-            color: var(--warning);
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 5rem 0;
-            background: var(--bg-secondary);
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--secondary);
-            margin-bottom: 1rem;
-        }
-
-        .section-subtitle {
-            text-align: center;
-            font-size: 1.125rem;
-            color: var(--text-light);
-            margin-bottom: 3rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            padding: 2rem;
-            background: white;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--gradient);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .feature-card:hover::before {
-            transform: translateX(0);
-        }
-
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-
-        .feature-card h3 {
-            font-size: 1.25rem;
-            color: var(--secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        .feature-card p {
-            color: var(--text-light);
-            line-height: 1.6;
-        }
-
-        /* How It Works Section */
-        .how-it-works {
-            padding: 5rem 0;
-            background: white;
-        }
-
-        .steps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .step {
-            text-align: center;
-            position: relative;
-        }
-
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0 auto 1.5rem;
-        }
-
-        .step h3 {
-            font-size: 1.25rem;
-            color: var(--secondary);
-            margin-bottom: 0.75rem;
-        }
-
-        .step p {
-            color: var(--text-light);
-            max-width: 300px;
-            margin: 0 auto;
-        }
-
-        /* Screenshots Section */
-        .screenshots {
-            padding: 5rem 0;
-            background: var(--bg-secondary);
-        }
-
-        .screenshots-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .screenshot {
-            position: relative;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .screenshot::after {
-            content: 'Click to view full size';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .screenshot:hover::after {
-            opacity: 1;
-        }
-
-        .screenshot:hover {
-            transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .screenshot img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .screenshot-label {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 0.75rem;
-            font-size: 0.875rem;
-            text-align: center;
-        }
-
-        /* Download Section */
-        .download {
-            padding: 5rem 0;
-            background: white;
-        }
-
-        .platform-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .platform-card {
-            text-align: center;
-            padding: 2rem;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .platform-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .platform-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .platform-card h3 {
-            font-size: 1.5rem;
-            color: var(--secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        .platform-card p {
-            color: var(--text-light);
-            margin-bottom: 1.5rem;
-        }
-
-        /* Footer */
-        footer {
-            padding: 3rem 0;
-            background: var(--secondary);
-            color: white;
-            text-align: center;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: white;
-            text-decoration: none;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            opacity: 1;
-        }
-
-        .footer-divider {
-            width: 50px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.2);
-            margin: 2rem auto;
-        }
-
-        .footer-copy {
-            opacity: 0.6;
-            font-size: 0.875rem;
-        }
-
-        /* Mobile Menu Toggle */
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: white;
-                flex-direction: column;
-                padding: 2rem;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .mobile-menu-toggle {
-                display: block;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.125rem;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-                max-width: 300px;
-            }
-
-            .privacy-badges {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<!-- Loading Screen -->
+<div id="loading-screen" class="loading-screen">
+    <div class="loading-content">
+        <img src="logo.svg" alt="OpenHeaders" class="loading-logo">
+        <div class="loading-text">Loading...</div>
+        <div class="loading-spinner"></div>
+    </div>
+</div>
 <!-- Header -->
 <header>
     <nav class="container">
         <a href="#" class="logo">
-            <img src="logo.png" alt="Open Headers Logo">
-            Open Headers
+            <img src="logo.svg" alt="OpenHeaders">
+            <span>OpenHeaders</span>
         </a>
         <ul class="nav-links" id="navLinks">
-            <li><a href="#why">Why OpenHeaders</a></li>
             <li><a href="#features">Features</a></li>
-            <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#screenshots">Screenshots</a></li>
+            <li><a href="#pricing">Pricing</a></li>
             <li><a href="#download">Download</a></li>
-            <li>
-                <a href="https://github.com/OpenHeaders" class="github-link" target="_blank" rel="noopener noreferrer">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                    </svg>
-                    GitHub
-                </a>
-            </li>
+            <li><a href="https://github.com/OpenHeaders" target="_blank" rel="noopener noreferrer">GitHub</a></li>
         </ul>
-        <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menu">
+            <img src="assets/icons/menu.svg" alt="Menu" width="24" height="24">
+        </button>
     </nav>
 </header>
 
 <!-- Hero Section -->
 <section class="hero">
     <div class="container">
-        <div class="hero-content">
-            <h1>Truly Local HTTP Header Management</h1>
-            <p>The only solution with dynamic header values from files, environment variables, and HTTP endpoints. Desktop app + browser extension working seamlessly together. 100% offline, zero tracking, genuinely open source.</p>
+        <h1>Browser Development Toolkit</h1>
+        <p class="hero-subtitle">Record workflows. Modify HTTP traffic. Team collaboration via Git</p>
+        <p class="hero-description">Open source. Privacy-focused. Offline only. Code signed (macOS+Windows)</p>
 
-            <div class="privacy-badges">
-                <div class="badge">
-                    <span>✓</span> Dynamic Headers
-                </div>
-                <div class="badge">
-                    <span>✓</span> 100% Local
-                </div>
-                <div class="badge">
-                    <span>✓</span> No Analytics
-                </div>
-                <div class="badge">
-                    <span>✓</span> MIT Licensed
-                </div>
-                <div class="badge">
-                    <span>✓</span> Works Offline
-                </div>
-            </div>
-
-            <div class="cta-buttons">
-                <a href="#download" class="btn btn-primary">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-                    </svg>
-                    Get Started Free
+        <div class="cta-section">
+            <div class="cta-group">
+                <a id="hero-download" href="#" class="btn btn-primary download-btn">
+                    Download
                 </a>
-                <a href="#why" class="btn btn-secondary">
-                    Compare with Others
+                <a href="#download" class="other-platforms-link">Other platforms</a>
+            </div>
+            <div class="cta-divider">and</div>
+            <div class="cta-group">
+                <a id="hero-extension" href="#" class="btn btn-secondary extension-btn">
+                    Add to Browser
                 </a>
-                <a href="https://github.com/OpenHeaders" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
-                    View Source Code
-                </a>
-            </div>
-
-            <div class="browser-extensions">
-                <p class="extensions-label">Available for all major browsers</p>
-                <div class="extension-links">
-                    <a href="https://chromewebstore.google.com/detail/ablaikadpbfblkmhpmbbnbbfjoibeejb" class="extension-link" target="_blank" rel="noopener noreferrer">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" alt="Chrome">
-                        Chrome
-                    </a>
-                    <a href="https://microsoftedge.microsoft.com/addons/detail/open-headers/gnbibobkkddlflknjkgcmokdlpddegpo" class="extension-link" target="_blank" rel="noopener noreferrer">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" alt="Edge">
-                        Edge
-                    </a>
-                    <a href="https://addons.mozilla.org/en-US/firefox/addon/open-headers/" class="extension-link" target="_blank" rel="noopener noreferrer">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg" alt="Firefox">
-                        Firefox
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Dynamic Headers Section -->
-<section class="features" style="padding: 3rem 0; background: white;">
-    <div class="container">
-        <div style="text-align: center; margin-bottom: 3rem;">
-            <h2 class="section-title" style="font-size: 2rem; margin-bottom: 1rem;">The Game Changer: Dynamic Headers</h2>
-            <p style="font-size: 1.125rem; color: var(--text-light); max-width: 800px; margin: 0 auto;">
-                While others only support static values, OpenHeaders revolutionizes header management with dynamic sources that update in real-time
-            </p>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; max-width: 900px; margin: 0 auto;">
-            <div style="text-align: center; padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px;">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📁</div>
-                <h3 style="font-size: 1.125rem; color: var(--secondary); margin-bottom: 0.5rem;">File Sources</h3>
-                <p style="font-size: 0.875rem; color: var(--text-light);">Monitor local files for changes and automatically update header values</p>
-            </div>
-
-            <div style="text-align: center; padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px;">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔧</div>
-                <h3 style="font-size: 1.125rem; color: var(--secondary); margin-bottom: 0.5rem;">Environment Variables</h3>
-                <p style="font-size: 0.875rem; color: var(--text-light);">Read values from system environment variables dynamically</p>
-            </div>
-
-            <div style="text-align: center; padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px;">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌐</div>
-                <h3 style="font-size: 1.125rem; color: var(--secondary); margin-bottom: 0.5rem;">HTTP Endpoints</h3>
-                <p style="font-size: 0.875rem; color: var(--text-light);">Fetch values from APIs with auto-refresh, auth, and JSON filtering</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Why OpenHeaders Section -->
-<section class="why-section" id="why">
-    <div class="container">
-        <h2 class="section-title">Dynamic Headers + True Privacy</h2>
-        <p class="section-subtitle">See why OpenHeaders is fundamentally different from "local-first" alternatives</p>
-
-        <div class="comparison-grid">
-            <div class="comparison-card highlight">
-                <h3>True Local-First</h3>
-                <ul class="feature-list">
-                    <li><span class="check">✓</span> Dynamic headers from files/env/HTTP</li>
-                    <li><span class="check">✓</span> Auto-refresh & real-time updates</li>
-                    <li><span class="check">✓</span> 100% runs on your device</li>
-                    <li><span class="check">✓</span> Works completely offline</li>
-                    <li><span class="check">✓</span> No cloud dependencies</li>
-                    <li><span class="check">✓</span> Zero tracking or analytics</li>
-                    <li><span class="check">✓</span> MIT licensed (truly open)</li>
-                    <li><span class="check">✓</span> Free forever</li>
-                    <li><span class="check">✓</span> Full source code available</li>
-                </ul>
-            </div>
-
-            <div class="comparison-card competitor">
-                <h3>Others Claim "Local"</h3>
-                <ul class="feature-list">
-                    <li><span class="cross">✗</span> Only static header values</li>
-                    <li><span class="cross">✗</span> No file/env integration</li>
-                    <li><span class="warning">⚠</span> Requires internet for features</li>
-                    <li><span class="cross">✗</span> Cloud sync mandatory</li>
-                    <li><span class="cross">✗</span> Tracks usage analytics</li>
-                    <li><span class="warning">⚠</span> "Source available" not open</li>
-                    <li><span class="cross">✗</span> Paid tiers for full features</li>
-                    <li><span class="cross">✗</span> Account registration required</li>
-                    <li><span class="warning">⚠</span> Can't modify or self-host</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- How It Works Section -->
-<section class="how-it-works" id="how-it-works">
-    <div class="container">
-        <h2 class="section-title">Simple Yet Powerful</h2>
-        <p class="section-subtitle">Desktop app and browser extension working in perfect harmony</p>
-
-        <div class="steps-grid">
-            <div class="step">
-                <div class="step-number">1</div>
-                <h3>Install Both Components</h3>
-                <p>Download the desktop app for your OS and install the browser extension. They connect locally, no internet needed.</p>
-            </div>
-
-            <div class="step">
-                <div class="step-number">2</div>
-                <h3>Configure Dynamic Headers</h3>
-                <p>Pull values from local files, environment variables, or HTTP endpoints. Set auto-refresh intervals, TOTP secrets, and JSON path filters. Everything updates in real-time, locally.</p>
-            </div>
-
-            <div class="step">
-                <div class="step-number">3</div>
-                <h3>Browse Seamlessly</h3>
-                <p>Headers are automatically injected into your requests. No cloud sync, no tracking, just pure local functionality.</p>
+                <a href="#download" class="other-browsers-link">Other browsers</a>
             </div>
         </div>
     </div>
@@ -898,84 +70,159 @@
 <!-- Features Section -->
 <section class="features" id="features">
     <div class="container">
-        <h2 class="section-title">Built for Dynamic Headers & Privacy</h2>
-        <p class="section-subtitle">The only solution with real-time dynamic values and true local-first principles</p>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🔄</div>
-                <h3>Dynamic Header Values</h3>
-                <p>Unlike static-only competitors, pull headers from local files, environment variables, or HTTP endpoints with real-time monitoring and auto-refresh.</p>
+        <!-- Feature 1 & 2: Recording and Sharing (merged in one row) -->
+        <div class="feature-row-merged">
+            <div class="feature-content">
+                <h3><img src="assets/icons/code.svg" alt="Code" class="feature-icon-inline">Record Workflow</h3>
+                <ul class="feature-list">
+                    <li>One-click recording initiation</li>
+                    <li>Capture browser tab activity in real-time</li>
+                    <li>Create professional demos effortlessly</li>
+                    <li>Debug technical issues with complete context</li>
+                </ul>
             </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🔒</div>
-                <h3>Zero Data Collection</h3>
-                <p>No telemetry, no analytics, no crash reports. We don't know you exist and we like it that way.</p>
+            <div class="feature-image">
+                <img src="assets/screenshots/d3.png" alt="Recording Interface">
             </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">💻</div>
-                <h3>Offline First</h3>
-                <p>Full functionality without internet. No "phoning home", no license checks, no surprise requirements.</p>
+            <div class="feature-content">
+                <h3><img src="assets/icons/share.svg" alt="Share" class="feature-icon-inline">Share Recording</h3>
+                <ul class="feature-list">
+                    <li>Export as MP4 or WebM video formats</li>
+                    <li>Save as JSON for perfect reproduction</li>
+                    <li>Attach to bug reports and tickets</li>
+                    <li>Share via secure links with teammates</li>
+                </ul>
             </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">⏱️</div>
-                <h3>Auto-Refresh & Monitoring</h3>
-                <p>Schedule periodic updates for HTTP sources and monitor file changes. Headers stay current automatically without manual intervention.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🛡️</div>
-                <h3>TOTP Authentication</h3>
-                <p>Generate time-based one-time passwords locally for secure API authentication. Perfect for services requiring 2FA tokens.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <h3>JSON Path Filtering</h3>
-                <p>Extract specific values from complex JSON responses using intuitive dot notation. Transform API responses into header values effortlessly.</p>
+            <div class="feature-image">
+                <img src="assets/screenshots/export-recording.png" alt="Export Recording Options">
             </div>
         </div>
+
+        <!-- Feature 3: Replay Recording (left image, right text) -->
+        <div class="feature-row">
+            <div class="feature-image">
+                <img src="assets/screenshots/d4.png" alt="Session Recording Demo">
+            </div>
+            <div class="feature-content">
+                <h3><img src="assets/icons/play.svg" alt="Play" class="feature-icon-inline">Play Recording</h3>
+                <ul class="feature-list">
+                    <li>Full playback control with timeline navigation</li>
+                    <li>Inspect network requests and responses</li>
+                    <li>View console logs and error messages</li>
+                    <li>Track storage and cookie changes</li>
+                    <li>Export sessions for team collaboration</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Feature 4: Team Workspaces (left image, right text) -->
+        <div class="feature-row">
+            <div class="feature-image">
+                <img src="assets/screenshots/d2.png" alt="Team Workspaces">
+            </div>
+            <div class="feature-content">
+                <h3><img src="assets/icons/team.svg" alt="Team" class="feature-icon-inline">Team Workspaces</h3>
+                <ul class="feature-list">
+                    <li>Git-based configuration synchronization</li>
+                    <li>Share rules and environments with team</li>
+                    <li>Keep sensitive data locally encrypted</li>
+                    <li>Branch-based workflow support</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Feature 5: HTTP Modification, Privacy First & Open Source (merged in one row) -->
+        <div class="feature-row-merged-three">
+            <div class="feature-content">
+                <h3><img src="assets/icons/edit.svg" alt="Edit" class="feature-icon-inline">HTTP Modification</h3>
+                <ul class="feature-list">
+                    <li>Real-time header and request modification</li>
+                    <li>Dynamic values from files and environment</li>
+                    <li>HTTP endpoint value injection</li>
+                    <li>Regex-based pattern matching</li>
+                </ul>
+            </div>
+            <div class="feature-image">
+                <img src="assets/screenshots/d1.png" alt="HTTP Modification Rules">
+            </div>
+            <div class="feature-content">
+                <h3><img src="assets/icons/lock.svg" alt="Lock" class="feature-icon-inline">Privacy First</h3>
+                <ul class="feature-list">
+                    <li>No telemetry or analytics</li>
+                    <li>No cloud dependencies</li>
+                    <li>Everything runs locally on your device</li>
+                    <li>Your data never leaves your computer</li>
+                </ul>
+            </div>
+            <div class="feature-content">
+                <h3><img src="assets/icons/layers.svg" alt="Layers" class="feature-icon-inline">Open Source</h3>
+                <ul class="feature-list">
+                    <li>Fully transparent codebase</li>
+                    <li>Modifiable and extensible</li>
+                    <li>Fork and customize for your needs</li>
+                    <li>MIT licensed - use freely in any project</li>
+                </ul>
+            </div>
+        </div>
+
     </div>
 </section>
 
-<!-- Screenshots Section -->
-<section class="screenshots" id="screenshots">
+<!-- Pricing Section -->
+<section class="pricing" id="pricing">
     <div class="container">
-        <h2 class="section-title">Dynamic Headers In Action</h2>
-        <p class="section-subtitle">See how easy it is to manage dynamic values from multiple sources • Click any screenshot to enlarge</p>
-
-        <div class="screenshots-grid">
-            <div class="screenshot">
-                <img src="screenshots/1-test-request-with-options.png" alt="Test HTTP Request">
-                <div class="screenshot-label">Test HTTP Request</div>
+        <h2>Transparent Pricing</h2>
+        <p class="pricing-subtitle">No hidden fees. No limitations.</p>
+        
+        <div class="pricing-container">
+            <div class="pricing-card">
+                <div class="price-header">
+                    <h3>Free</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">0</span>
+                    </div>
+                </div>
+                
+                <div class="price-features">
+                    <h4>Everything Included</h4>
+                    <ul>
+                        <li>
+                            <img src="assets/icons/check.svg" alt="Check">
+                            <span>Unlimited modification rules</span>
+                        </li>
+                        <li>
+                            <img src="assets/icons/check.svg" alt="Check">
+                            <span>Unlimited sources (HTTP/Env/File)</span>
+                        </li>
+                        <li>
+                            <img src="assets/icons/check.svg" alt="Check">
+                            <span>Unlimited recordings</span>
+                        </li>
+                        <li>
+                            <img src="assets/icons/check.svg" alt="Check">
+                            <span>Team workspace collaboration</span>
+                        </li>
+                        <li>
+                            <img src="assets/icons/check.svg" alt="Check">
+                            <span>Free support (Website Chat & Email)</span>
+                        </li>
+                        <li>
+                            <img src="assets/icons/check.svg" alt="Check">
+                            <span>Personal and commercial use</span>
+                        </li>
+                        <li>
+                            <img src="assets/icons/check.svg" alt="Check">
+                            <span>No telemetry or data collection</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
-
-            <div class="screenshot">
-                <img src="screenshots/2-response-preview-filtered.png" alt="Response Preview">
-                <div class="screenshot-label">Response Preview with Filtering</div>
-            </div>
-
-            <div class="screenshot">
-                <img src="screenshots/3-view-source-content-after-adding.png" alt="View Source Content">
-                <div class="screenshot-label">View Source Content</div>
-            </div>
-
-            <div class="screenshot">
-                <img src="screenshots/4-edit-http-source-after-adding.png" alt="Edit HTTP Source">
-                <div class="screenshot-label">Edit HTTP Source</div>
-            </div>
-
-            <div class="screenshot">
-                <img src="screenshots/5-settings-startup-display.png" alt="App Settings">
-                <div class="screenshot-label">App Settings</div>
-            </div>
-
-            <div class="screenshot">
-                <img src="screenshots/6-import-sources-validation.png" alt="Import Sources">
-                <div class="screenshot-label">Import/Export Configuration</div>
+            
+            <div class="pricing-contact">
+                <h3>Need additional features?</h3>
+                <p>We're always improving OpenHeaders based on community feedback. Reach out via the website chat in the bottom right corner or email us.</p>
+                <button class="btn btn-secondary" id="copy-email-btn">Copy Email<img src="assets/icons/copy.svg" alt="Copy" width="16" height="16"></button>
             </div>
         </div>
     </div>
@@ -984,29 +231,40 @@
 <!-- Download Section -->
 <section class="download" id="download">
     <div class="container">
-        <h2 class="section-title">Download OpenHeaders</h2>
-        <p class="section-subtitle">Desktop app for all platforms + browser extensions</p>
-
-        <div class="platform-grid">
-            <div class="platform-card">
-                <div class="platform-icon">🪟</div>
-                <h3>Windows</h3>
-                <p>Windows 10/11 (64-bit)</p>
-                <a href="https://github.com/OpenHeaders/open-headers-app/releases/latest" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Download for Windows</a>
+        <h2>Get Started</h2>
+        
+        <div class="download-grid">
+            <div class="desktop-download-card">
+                <h3>Desktop Application</h3>
+                <p>Available for macOS, Windows, and Linux</p>
+                <a id="primary-download" href="#" class="btn btn-primary download-btn">
+                    Download
+                </a>
+                <details class="other-downloads">
+                    <summary>Other platforms</summary>
+                    <div id="other-downloads" class="download-options">
+                        <!-- Populated by JS -->
+                    </div>
+                </details>
             </div>
-
-            <div class="platform-card">
-                <div class="platform-icon">🍎</div>
-                <h3>macOS</h3>
-                <p>macOS 10.15+ (Intel & Apple Silicon)</p>
-                <a href="https://github.com/OpenHeaders/open-headers-app/releases/latest" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Download for macOS</a>
-            </div>
-
-            <div class="platform-card">
-                <div class="platform-icon">🐧</div>
-                <h3>Linux</h3>
-                <p>Ubuntu 18.04+, Debian 10+ (x64 & ARM64)</p>
-                <a href="https://github.com/OpenHeaders/open-headers-app/releases/latest" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Download for Linux</a>
+            
+            <div class="browser-download-card">
+                <h3>Browser Extensions</h3>
+                <p>Works with all major browsers</p>
+                <div class="browser-links">
+                    <a href="https://chromewebstore.google.com/detail/ablaikadpbfblkmhpmbbnbbfjoibeejb" class="browser-link" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/icons/chrome.svg" alt="Chrome" width="16" height="16">
+                        Chrome
+                    </a>
+                    <a href="https://microsoftedge.microsoft.com/addons/detail/open-headers/gnbibobkkddlflknjkgcmokdlpddegpo" class="browser-link" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/icons/edge.svg" alt="Edge" width="16" height="16">
+                        Edge
+                    </a>
+                    <a href="https://addons.mozilla.org/en-US/firefox/addon/open-headers/" class="browser-link" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/icons/firefox.svg" alt="Firefox" width="16" height="16">
+                        Firefox
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -1015,89 +273,19 @@
 <!-- Footer -->
 <footer>
     <div class="container">
-        <div class="footer-links">
-            <a href="https://github.com/OpenHeaders" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="https://github.com/OpenHeaders/open-headers-app" target="_blank" rel="noopener noreferrer">Desktop App</a>
-            <a href="https://github.com/OpenHeaders/open-headers-browser-extension" target="_blank" rel="noopener noreferrer">Browser Extension</a>
-            <a href="https://github.com/OpenHeaders/open-headers-app/issues" target="_blank" rel="noopener noreferrer">Support</a>
-            <a href="https://github.com/OpenHeaders/open-headers-app/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
-            <a href="https://github.com/OpenHeaders/open-headers-app/blob/main/docs/PRIVACY.md" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://github.com/OpenHeaders" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://github.com/OpenHeaders/open-headers-app/blob/main/LICENSE.md" target="_blank" rel="noopener noreferrer">License</a>
+                <a href="https://github.com/OpenHeaders/open-headers-app/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Contributing</a>
+                <a href="https://github.com/OpenHeaders/open-headers-app/issues" target="_blank" rel="noopener noreferrer">Support</a>
+                <a href="https://github.com/OpenHeaders/open-headers-app/blob/main/docs/PRIVACY.md" target="_blank" rel="noopener noreferrer">Privacy</a>
+            </div>
+            <p class="footer-copy">© 2025 Daniel Tirzuman</p>
         </div>
-        <div class="footer-divider"></div>
-        <p class="footer-copy">© 2025 OpenHeaders. Free and open source forever.</p>
     </div>
 </footer>
 
-<script>
-    // Mobile menu toggle
-    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-    const navLinks = document.getElementById('navLinks');
-
-    mobileMenuToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-    });
-
-    // Close mobile menu when clicking on a link
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-        });
-    });
-
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-
-    // Add scroll effect to header
-    window.addEventListener('scroll', () => {
-        const header = document.querySelector('header');
-        if (window.scrollY > 50) {
-            header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-        } else {
-            header.style.boxShadow = 'none';
-        }
-    });
-
-    // Animate elements on scroll
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-
-    // Observe feature cards, screenshots, and comparison cards
-    document.querySelectorAll('.feature-card, .screenshot, .comparison-card, .step').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'all 0.6s ease';
-        observer.observe(el);
-    });
-
-    // Make screenshots clickable to view full size
-    document.querySelectorAll('.screenshot').forEach(screenshot => {
-        screenshot.addEventListener('click', function() {
-            const img = this.querySelector('img');
-            window.open(img.src, '_blank');
-        });
-    });
-</script>
+<script type="module" src="app.js"></script>
 </body>
 </html>

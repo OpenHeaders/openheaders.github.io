@@ -17,7 +17,11 @@ function buildProtocolUrl(data) {
         // Compress payload using gzip
         const payloadStr = JSON.stringify(payload);
         const compressed = pako.gzip(payloadStr);
-        const base64url = btoa(String.fromCharCode.apply(null, compressed))
+        
+        // Convert to base64url properly
+        // First convert Uint8Array to regular array, then to binary string
+        const binaryStr = Array.from(compressed, byte => String.fromCharCode(byte)).join('');
+        const base64url = btoa(binaryStr)
             .replace(/\+/g, '-')
             .replace(/\//g, '_')
             .replace(/=/g, '');
@@ -25,9 +29,12 @@ function buildProtocolUrl(data) {
         return `openheaders://open?payload=${base64url}`;
     } catch (error) {
         console.error('Failed to compress payload:', error);
-        // Fallback to uncompressed
-        const base64 = btoa(JSON.stringify(payload));
-        return `openheaders://open?payload=${base64}`;
+        // Fallback to uncompressed - also use base64url encoding
+        const base64url = btoa(JSON.stringify(payload))
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=/g, '');
+        return `openheaders://open?payload=${base64url}`;
     }
 }
 
@@ -312,19 +319,49 @@ async function displayDownloadOptions() {
 // Initialize page
 function init() {
     const params = new URLSearchParams(window.location.search);
-    const inviteParam = params.get('invite');
+    const payloadParam = params.get('payload');
     
-    if (!inviteParam) {
+    if (!payloadParam) {
         displayError('No invite found');
         return;
     }
     
     try {
-        inviteData = JSON.parse(atob(inviteParam));
+        // Decode the unified payload format
+        let decodedPayload;
+        
+        try {
+            // Try to decompress payload using gzip
+            const compressed = Uint8Array.from(atob(payloadParam.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+            const decompressed = pako.ungzip(compressed, { to: 'string' });
+            decodedPayload = JSON.parse(decompressed);
+        } catch (compressionError) {
+            // Fallback to regular base64 decoding for backward compatibility
+            try {
+                decodedPayload = JSON.parse(atob(payloadParam));
+            } catch (base64Error) {
+                throw new Error('Failed to decode payload: invalid format');
+            }
+        }
+        
+        // Validate payload structure
+        if (!decodedPayload.action || decodedPayload.action !== 'team-invite') {
+            displayError('Invalid invite type');
+            return;
+        }
+        
+        if (!decodedPayload.data) {
+            displayError('Invalid invite data');
+            return;
+        }
+        
+        inviteData = decodedPayload.data;
+        
         if (!inviteData.workspaceName || !inviteData.repoUrl) {
             displayError('Invalid invite');
             return;
         }
+        
         displayWorkspaceInfo(inviteData);
         displayDownloadOptions();
         checkIfAppInstalled();
@@ -343,6 +380,7 @@ function init() {
             });
         }
     } catch (e) {
+        console.error('Error processing invite:', e);
         displayError('Invalid invite');
     }
 }

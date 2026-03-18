@@ -69,9 +69,36 @@ function iconImg(icon, lazy = false) {
   return map[icon] || '';
 }
 
+const RELEASES_URL = 'https://github.com/OpenHeaders/open-headers-app/releases/latest';
+
+function getPlatformMeta(plat) {
+  if (plat.os === 'mac') return { name: plat.arch === 'arm64' ? 'macOS Apple Silicon' : 'macOS Intel', icon: 'apple' };
+  if (plat.os === 'windows') return { name: 'Windows', icon: 'windows' };
+  if (plat.os.includes('linux')) return { name: plat.display || 'Linux', icon: 'linux' };
+  return null;
+}
+
 export async function displayDownloadOptions() {
-  await fetchLatestVersion();
+  // Detect platform immediately — don't wait for version
   const plat = await detectPlatform();
+  const meta = getPlatformMeta(plat);
+
+  // Update buttons with platform info right away (fallback to releases page)
+  if (meta) {
+    const heroEl = document.getElementById('hero-download');
+    if (heroEl) {
+      heroEl.href = RELEASES_URL;
+      heroEl.innerHTML = `${iconImg(meta.icon)}<span class="flex flex-col gap-px text-left"><span class="text-sm font-medium">Download Desktop App</span><span class="text-[.6875rem] opacity-70 font-mono">${meta.name}</span></span>`;
+    }
+    const primaryEl = document.getElementById('primary-download');
+    if (primaryEl) {
+      primaryEl.href = RELEASES_URL;
+      primaryEl.innerHTML = `${iconImg(meta.icon)}<span class="flex flex-col gap-px text-left"><span class="text-sm font-medium">Download for ${meta.name}</span></span>`;
+    }
+  }
+
+  // Now fetch version and update URLs if successful
+  await fetchLatestVersion();
 
   let primary = null;
   if (plat.os === 'mac') primary = getDownloadUrl('mac', plat.arch);
@@ -82,7 +109,6 @@ export async function displayDownloadOptions() {
     else primary = getDownloadUrl('linux-appimage', plat.arch);
   }
 
-  // Hero download button
   if (primary) {
     const heroEl = document.getElementById('hero-download');
     if (heroEl) {
@@ -90,8 +116,6 @@ export async function displayDownloadOptions() {
       heroEl.innerHTML = `${iconImg(primary.icon)}<span class="flex flex-col gap-px text-left"><span class="text-sm font-medium">Download Desktop App</span><span class="text-[.6875rem] opacity-70 font-mono">${primary.name}</span></span>`;
       heroEl.setAttribute('download', '');
     }
-
-    // Primary download in section
     const primaryEl = document.getElementById('primary-download');
     if (primaryEl) {
       primaryEl.href = primary.url;

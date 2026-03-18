@@ -61,7 +61,7 @@ function iconImg(icon, lazy = false) {
 
 export async function displayDownloadOptions() {
   await fetchLatestVersion();
-  const plat = detectPlatform();
+  const plat = await detectPlatform();
 
   let primary = null;
   if (plat.os === 'mac') primary = getDownloadUrl('mac', plat.arch);
@@ -98,9 +98,10 @@ export async function displayDownloadOptions() {
     if (browser.unsupported) {
       // Safari or unsupported browser — show "coming soon" state
       extEl.removeAttribute('href');
-      extEl.style.opacity = '.6';
       extEl.style.cursor = 'default';
-      extEl.innerHTML = `<img src="${browser.icon}" alt="${browser.name}" width="18" height="18" loading="eager"><span class="flex flex-col gap-px text-left"><span class="text-sm font-medium">Browser Extension</span><span class="text-[.6875rem] opacity-70 font-mono">${browser.name}</span></span>`;
+      extEl.style.color = 'var(--c-tx2)';
+      extEl.style.borderColor = 'var(--c-bd)';
+      extEl.innerHTML = `<img src="${browser.icon}" alt="${browser.name}" width="18" height="18" loading="eager"><span class="flex flex-col gap-px text-left"><span class="text-sm font-medium">Browser Extension</span><span class="text-[.6875rem] font-mono" style="color:var(--c-tx3)">Coming soon for ${browser.name.replace(' (coming soon)', '')}</span></span>`;
     } else {
       extEl.href = browser.url;
       extEl.innerHTML = `<img src="${browser.icon}" alt="${browser.name}" width="18" height="18" loading="eager"><span class="flex flex-col gap-px text-left"><span class="text-sm font-medium">Install Browser Extension</span><span class="text-[.6875rem] opacity-70 font-mono">${browser.name}</span></span>`;

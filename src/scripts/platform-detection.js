@@ -7,41 +7,56 @@ export function detectBrowser() {
     return { browser: 'firefox', name: 'Firefox', url: 'https://addons.mozilla.org/en-US/firefox/addon/open-headers/', icon: '/assets/icons/firefox.svg' };
   } else if (ua.includes('safari') && !ua.includes('chrome') && !ua.includes('chromium')) {
     // Safari detected — no extension available yet, show graceful fallback
-    return { browser: 'safari', name: 'Safari (coming soon)', url: null, icon: '/assets/icons/chrome.svg', unsupported: true };
+    return { browser: 'safari', name: 'Safari (coming soon)', url: null, icon: '/assets/icons/safari.svg', unsupported: true };
   } else if (ua.includes('chrome') || ua.includes('chromium')) {
     return { browser: 'chrome', name: 'Chrome', url: 'https://chromewebstore.google.com/detail/ablaikadpbfblkmhpmbbnbbfjoibeejb', icon: '/assets/icons/chrome.svg' };
   }
   return null;
 }
 
-export function detectPlatform() {
+export async function detectPlatform() {
   const ua = navigator.userAgent.toLowerCase();
-  let platform = '';
 
-  if (navigator?.userAgentData?.platform) {
-    platform = navigator.userAgentData.platform.toLowerCase();
-  } else {
-    if (ua.includes('mac')) platform = 'macintel';
-    else if (ua.includes('win')) platform = 'win32';
-    else if (ua.includes('linux')) platform = 'linux';
+  // Try high-entropy values first (Chrome/Edge) — only accurate way to detect Apple Silicon
+  if (navigator.userAgentData?.getHighEntropyValues) {
+    try {
+      const data = await navigator.userAgentData.getHighEntropyValues(['architecture', 'platform', 'bitness']);
+      const platform = data.platform?.toLowerCase() || '';
+      const arch = data.architecture?.toLowerCase() || '';
+
+      if (platform.includes('mac')) {
+        const isArm = arch === 'arm';
+        return { os: 'mac', arch: isArm ? 'arm64' : 'x64', display: isArm ? 'macOS Apple Silicon' : 'macOS Intel' };
+      }
+      if (platform.includes('win')) {
+        return { os: 'windows', arch: 'x64', display: 'Windows' };
+      }
+      if (platform.includes('linux')) {
+        const isArm = arch === 'arm';
+        if (ua.includes('ubuntu') || ua.includes('debian')) return { os: 'linux-deb', arch: isArm ? 'arm64' : 'x64', display: 'Linux (Debian/Ubuntu)' };
+        if (ua.includes('fedora') || ua.includes('rhel') || ua.includes('centos')) return { os: 'linux-rpm', arch: isArm ? 'arm64' : 'x64', display: 'Linux (Fedora/RHEL)' };
+        return { os: 'linux', arch: isArm ? 'arm64' : 'x64', display: 'Linux' };
+      }
+    } catch {}
   }
 
-  let arch = 'x64';
+  // Fallback: UA-based detection (navigator.platform lies "MacIntel" even on Apple Silicon)
+  const isMac = ua.includes('mac') || (navigator.userAgentData?.platform || '').toLowerCase().includes('mac');
+  const isWin = ua.includes('win') || (navigator.userAgentData?.platform || '').toLowerCase().includes('win');
+  const isLinux = ua.includes('linux');
 
-  if (platform.includes('mac') || ua.includes('mac')) {
-    const isAppleSilicon =
-      (navigator.platform?.toLowerCase() || '').includes('arm') ||
-      navigator?.userAgentData?.architecture === 'arm' ||
-      (screen.width === 1512 && screen.height === 982) ||
-      (screen.width === 1728 && screen.height === 1117) ||
-      (screen.width === 1496 && screen.height === 967);
-    arch = isAppleSilicon ? 'arm64' : 'x64';
-    return { os: 'mac', arch, display: 'macOS' };
-  } else if (platform.includes('win') || ua.includes('win')) {
-    arch = navigator.userAgent.includes('WOW64') || navigator.userAgent.includes('Win64') ? 'x64' : 'x86';
-    return { os: 'windows', arch, display: 'Windows' };
-  } else if (platform.includes('linux') || ua.includes('linux')) {
-    arch = navigator.userAgent.includes('aarch64') || navigator.userAgent.includes('arm') ? 'arm64' : 'x64';
+  if (isMac) {
+    // navigator.platform is unreliable on Apple Silicon — default to arm64 for Safari on modern Macs
+    // since most Macs sold since late 2020 are Apple Silicon and x64 build runs via Rosetta anyway
+    const isSafari = ua.includes('safari') && !ua.includes('chrome') && !ua.includes('chromium');
+    const arch = isSafari ? 'arm64' : 'x64';
+    return { os: 'mac', arch, display: isSafari ? 'macOS Apple Silicon' : 'macOS Intel' };
+  }
+  if (isWin) {
+    return { os: 'windows', arch: 'x64', display: 'Windows' };
+  }
+  if (isLinux) {
+    const arch = ua.includes('aarch64') || ua.includes('arm') ? 'arm64' : 'x64';
     if (ua.includes('ubuntu') || ua.includes('debian')) return { os: 'linux-deb', arch, display: 'Linux (Debian/Ubuntu)' };
     if (ua.includes('fedora') || ua.includes('rhel') || ua.includes('centos')) return { os: 'linux-rpm', arch, display: 'Linux (Fedora/RHEL)' };
     return { os: 'linux', arch, display: 'Linux' };

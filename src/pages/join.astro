@@ -10,8 +10,20 @@ import logo from '../assets/logo.svg';
 
       <!-- Header -->
       <div class="join-header">
-        <Image src={logo} alt="OpenHeaders" width={32} height={32} loading="eager" class="rounded-sm" />
-        <span class="brand">OpenHeaders</span>
+        <div class="header-brand">
+          <Image src={logo} alt="OpenHeaders" width={32} height={32} loading="eager" class="rounded-sm" />
+          <span class="brand">OpenHeaders</span>
+        </div>
+        <button id="themeToggle" aria-label="Toggle theme" class="theme-toggle">
+          <!-- Sun (shown in dark mode) -->
+          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <!-- Moon (shown in light mode) -->
+          <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+          </svg>
+        </button>
       </div>
 
       <!-- Progress -->
@@ -211,12 +223,12 @@ import logo from '../assets/logo.svg';
 
     function renderInstallSteps(os: string) {
       const steps: Record<string, string[]> = {
-        mac:             ['Open the .dmg file', 'Drag & drop OpenHeaders → Applications', 'Launch from Applications'],
-        windows:         ['Double-click the installer', 'App installs & launches automatically'],
-        'linux-appimage':['chmod +x OpenHeaders-*.AppImage', 'Run: sudo ./install-open-headers.sh', 'Launch from app menu'],
-        'linux-deb':     ['sudo apt install ./open-headers_*.deb', 'Launch from app menu'],
-        'linux-rpm':     ['sudo rpm -i open-headers-*.rpm', 'Launch from app menu'],
-        linux:           ['Make executable & run installer', 'Launch from app menu'],
+        mac:             ['Press the download button above', 'Open the .dmg file', 'Drag & drop OpenHeaders → Applications'],
+        windows:         ['Press the download button above', 'Double-click the installer'],
+        'linux-appimage':['Press the download button above', 'chmod +x OpenHeaders-*.AppImage', 'Run: sudo ./install-open-headers.sh'],
+        'linux-deb':     ['Press the download button above', 'sudo apt install ./open-headers_*.deb'],
+        'linux-rpm':     ['Press the download button above', 'sudo rpm -i open-headers-*.rpm'],
+        linux:           ['Press the download button above', 'Make executable & run installer'],
       };
       const list = steps[os] || steps.linux;
       const stepsHtml = list.map((s, i) =>
@@ -278,7 +290,7 @@ import logo from '../assets/logo.svg';
         // App detected — promote "Open in app" to primary
         const btnOpen = document.getElementById('btn-open-app');
         const btnInstall = document.getElementById('btn-need-install');
-        if (btnOpen) { btnOpen.className = 'btn-primary'; btnOpen.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg> Open in OpenHeaders'; }
+        if (btnOpen) { btnOpen.className = 'btn-primary'; btnOpen.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Join Workspace'; }
         if (btnInstall) { btnInstall.className = 'btn-ghost'; btnInstall.innerHTML = 'Download instead'; }
         const badge = document.getElementById('app-detected-badge');
         if (badge) badge.style.display = 'flex';
@@ -327,7 +339,7 @@ import logo from '../assets/logo.svg';
           const bytes = Uint8Array.from(atob(payloadParam.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
           decoded = JSON.parse((window as any).pako.ungzip(bytes, { to: 'string' }));
         } catch {
-          try { decoded = JSON.parse(atob(payloadParam)); } catch { throw new Error('Invalid format'); }
+          decoded = JSON.parse(atob(payloadParam));
         }
 
         if (decoded.action !== 'team-invite' || !decoded.data) { showError('This invite is not valid.'); return; }
@@ -392,6 +404,12 @@ import logo from '../assets/logo.svg';
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
+
+    // Theme toggle
+    document.getElementById('themeToggle')?.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('oh-theme', isDark ? 'dark' : 'light');
+    });
   </script>
 </Base>
 
@@ -409,10 +427,24 @@ import logo from '../assets/logo.svg';
 
   /* Header */
   .join-header {
-    display: flex; align-items: center; justify-content: center;
-    gap: .5rem; margin-bottom: 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 2rem;
   }
-  .brand { font-family: var(--font-display); font-weight: 700; font-size: .9375rem; color: var(--c-tx); }
+  .header-brand { display: flex; align-items: center; gap: .5rem; }
+  .brand { font-family: Inter, -apple-system, sans-serif; font-weight: 700; font-size: .9375rem; color: var(--c-tx); }
+
+  /* Theme toggle */
+  .theme-toggle {
+    border: 1px solid var(--c-bd); border-radius: 6px; padding: 7px;
+    cursor: pointer; color: var(--c-tx2); background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s; flex-shrink: 0;
+  }
+  .theme-toggle:hover { border-color: var(--c-bdhi); color: var(--c-tx); }
+  .sun-icon { display: none; }
+  .moon-icon { display: block; }
+  :global(.dark) .sun-icon  { display: block; }
+  :global(.dark) .moon-icon { display: none; }
 
   /* Progress indicator */
   .progress {
@@ -446,17 +478,17 @@ import logo from '../assets/logo.svg';
     margin: 0 auto 1.25rem; color: var(--c-accent);
   }
   .invite-label { text-align: center; font-size: .8125rem; color: var(--c-tx2); margin-bottom: .375rem; }
-  .invite-name { text-align: center; font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--c-tx); margin-bottom: .5rem; }
+  .invite-name { text-align: center; font-family: Inter, -apple-system, sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--c-tx); margin-bottom: .5rem; }
   .invite-by { text-align: center; font-size: .875rem; color: var(--c-tx2); margin-bottom: 2rem; }
 
   /* Step titles */
   .step-title {
-    font-family: var(--font-display); font-size: 1.125rem; font-weight: 700;
+    font-family: Inter, -apple-system, sans-serif; font-size: 1.125rem; font-weight: 700;
     color: var(--c-tx); margin-bottom: .5rem; display: flex; align-items: center; gap: .625rem;
   }
   .step-num {
     width: 24px; height: 24px; border-radius: 50%; background: var(--c-accent);
-    color: #fff; font-size: .75rem; font-weight: 700; font-family: var(--font-mono);
+    color: #fff; font-size: .75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
     display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
   .step-sub { font-size: .875rem; color: var(--c-tx2); margin-bottom: 1.5rem; line-height: 1.6; }
@@ -486,7 +518,7 @@ import logo from '../assets/logo.svg';
   .dl-btn { text-align: left; justify-content: flex-start; margin-bottom: 1rem; }
   .dl-btn-text { display: flex; flex-direction: column; gap: 2px; }
   .dl-btn-main { font-size: .9375rem; font-weight: 500; }
-  .dl-btn-sub { font-size: .75rem; opacity: .7; font-family: var(--font-mono); }
+  .dl-btn-sub { font-size: .75rem; opacity: .7; font-family: 'JetBrains Mono', monospace; }
 
   /* Other downloads */
   .dl-other { margin-bottom: 1rem; }

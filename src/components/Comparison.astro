@@ -1,0 +1,365 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.svg';
+const yes     = `<span class="ic ic-yes"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="var(--c-successdim)"/><path d="M6.5 10l2.5 2.5 4.5-5" stroke="var(--c-success)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+const no      = `<span class="ic ic-no"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="var(--c-bg4)"/><path d="M7 10h6" stroke="var(--c-tx3)" stroke-width="1.75" stroke-linecap="round"/></svg></span>`;
+const partial = `<span class="ic ic-partial"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="rgba(245,158,11,.1)"/><path d="M6.5 10l2.5 2.5 4.5-5" stroke="#F59E0B" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+const soon    = `<span class="cmp-soon">Soon</span>`;
+---
+
+<section class="py-28" id="comparison">
+  <div class="max-w-[1100px] mx-auto px-7 relative z-[1]">
+
+    <!-- Header -->
+    <div class="text-center mb-[72px]">
+      <div class="flex items-center gap-2 justify-center font-mono text-[.6875rem] font-medium text-accent uppercase tracking-[.12em] mb-2.5 before:content-['//'] before:opacity-50">why openheaders</div>
+      <h2 class="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold tracking-tight text-tx leading-[1.1]">One tool.<br>No subscriptions. No cloud.</h2>
+
+    </div>
+
+    <div class="cmp-scroll">
+      <table class="cmp-table">
+        <colgroup>
+          <col style="width:36%" />
+          <col style="width:21%" />
+          <col style="width:21%" />
+          <col style="width:22%" />
+        </colgroup>
+
+        <thead>
+          <tr>
+            <th class="th-feat"></th>
+            <th class="th-oh">
+              <Image src={logo} alt="" width={18} height={18} class="rounded-sm" loading="lazy" />
+              OpenHeaders
+              <span class="oh-badge">Free</span>
+            </th>
+            <th class="th-other">Requestly</th>
+            <th class="th-other">Postman</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <!-- Price -->
+          <tr class="tr-price">
+            <td class="td-feat td-feat-muted"><svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v6M6.5 6.5a1.5 1.5 0 011.5-1.5 1.5 1.5 0 010 3 1.5 1.5 0 000 3 1.5 1.5 0 001.5-1.5"/></svg>Price / user / year<span class="tip" data-tip="Total annual cost per seat on paid plans"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.5 3.5a1.5 1.5 0 012.8.75c0 1-1.3 1.25-1.3 2.25"/><circle cx="5" cy="8" r=".5" fill="currentColor" stroke="none"/></svg></span></td>
+            <td class="td-oh"><span class="price-free">$0</span></td>
+            <td class="td-other"><span class="price-paid">$276</span></td>
+            <td class="td-other"><span class="price-paid">$228</span></td>
+          </tr>
+
+          <!-- Privacy -->
+          <tr class="tr-section">
+            <td class="td-sect-label">Privacy &amp; Ownership</td>
+            <td class="td-oh td-sect-oh"></td>
+            <td class="td-other"></td>
+            <td class="td-other"></td>
+          </tr>
+          <tr class="tr-data">
+            <td class="td-feat"><svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13.5c-3-.85-3-2.15-4-2.5m8 2.5c3-.85 3-2.15 4-2.5M8 13V9.5M8 9.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/></svg>Open source<span class="tip" data-tip="Source code is publicly available and auditable by anyone"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.5 3.5a1.5 1.5 0 012.8.75c0 1-1.3 1.25-1.3 2.25"/><circle cx="5" cy="8" r=".5" fill="currentColor" stroke="none"/></svg></span></td>
+            <td class="td-oh"><Fragment set:html={yes} /><span class="cn">MIT licensed</span></td>
+            <td class="td-other"><Fragment set:html={no} /></td>
+            <td class="td-other"><Fragment set:html={no} /></td>
+          </tr>
+          <tr class="tr-data">
+            <td class="td-feat"><svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l12 12M9.5 9.7A3 3 0 016.3 6.5M4.5 4.6A5 5 0 0113 9M1.4 7A7 7 0 0115 9"/></svg>Fully offline<span class="tip" data-tip="Runs entirely on your machine with no internet or cloud dependency"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.5 3.5a1.5 1.5 0 012.8.75c0 1-1.3 1.25-1.3 2.25"/><circle cx="5" cy="8" r=".5" fill="currentColor" stroke="none"/></svg></span></td>
+            <td class="td-oh"><Fragment set:html={yes} /></td>
+            <td class="td-other"><Fragment set:html={no} /><span class="cn">Cloud-based</span></td>
+            <td class="td-other"><Fragment set:html={no} /><span class="cn">Cloud-based</span></td>
+          </tr>
+          <tr class="tr-data">
+            <td class="td-feat"><svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>Telemetry<span class="tip" data-tip="Whether the tool collects usage data and sends it to vendor servers"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.5 3.5a1.5 1.5 0 012.8.75c0 1-1.3 1.25-1.3 2.25"/><circle cx="5" cy="8" r=".5" fill="currentColor" stroke="none"/></svg></span></td>
+            <td class="td-oh"><Fragment set:html={yes} /><span class="cn">Zero telemetry</span></td>
+            <td class="td-other"><Fragment set:html={no} /><span class="cn">Collected</span></td>
+            <td class="td-other"><Fragment set:html={no} /><span class="cn">Collected</span></td>
+          </tr>
+          <tr class="tr-data">
+            <td class="td-feat"><svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="8" height="6" rx="1"/><path d="M6 7V5a2 2 0 014 0v2"/></svg>No account needed<span class="tip" data-tip="Use the tool without registering or signing in"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.5 3.5a1.5 1.5 0 012.8.75c0 1-1.3 1.25-1.3 2.25"/><circle cx="5" cy="8" r=".5" fill="currentColor" stroke="none"/></svg></span></td>
+            <td class="td-oh"><Fragment set:html={yes} /></td>
+            <td class="td-other"><Fragment set:html={no} /></td>
+            <td class="td-other"><Fragment set:html={no} /></td>
+          </tr>
+
+          <!-- Traffic Control -->
+          <tr class="tr-section">
+            <td class="td-sect-label">Traffic Control</td>
+            <td class="td-oh td-sect-oh"></td>
+            <td class="td-other"></td>
+            <td class="td-other"></td>
+          </tr>
+          <tr class="tr-data">
+            <td class="td-feat"><svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 2 8 4 10"/><polyline points="12 6 14 8 12 10"/><line x1="8" y1="4" x2="8" y2="12"/></svg>Header modification<span class="tip" data-tip="Add, edit, or remove HTTP request and response headers on any domain"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.5 3.5a1.5 1.5 0 012.8.75c0 1-1.3 1.25-1.3 2.25"/><circle cx="5" cy="8" r=".5" fill="currentColor" stroke="none"/></svg></span></td>
+            <td class="td-oh"><Fragment set:html={yes} /></td>
+            <td class="td-other"><Fragment set:html={yes} /></td>
+            <td class="td-other"><Fragment set:html={partial} /><span class="cn">Limited</span></td>
+          </tr>
+          <tr class="tr-data">
+            <td class="td-feat"><svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><line x1="3" y1="3" x2="13" y2="13"/></svg>Request blocking &amp; redirect<span class="tip" data-tip="Block specific network requests or redirect them to a different URL"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.5 3.5a1.5 1.5 0 012.8.75c0 1-1.3 1.25-1.3 2.25"/><circle cx="5" cy="8" r=".5" fill="currentColor" stroke="none"/></svg></span></td>
+            <td class="td-oh"><Fragment set:html={yes} /></td>
+            <td class="td-other"><Fragment set:html={yes} /></td>
+            <td class="td-other"><Fragment set:html={no} /></td>
+          </tr>
+          <tr class="tr-data">
+            <td class="td-feat"><svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5 5.5 11.5 8 6.5 10.5"/></svg>Session recording &amp; replay<span class="tip" data-tip="Capture a full browser session including HTTP traffic, console logs, and DOM state, then replay it later"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.5 3.5a1.5 1.5 0 012.8.75c0 1-1.3 1.25-1.3 2.25"/><circle cx="5" cy="8" r=".5" fill="currentColor" stroke="none"/></svg></span></td>
+            <td class="td-oh"><Fragment set:html={yes} /><span class="cn">Full fidelity replay</span></td>
+            <td class="td-other"><Fragment set:html={partial} /><span class="cn">Paid only</span></td>
+            <td class="td-other"><Fragment set:html={no} /></td>
+          </tr>
+
+          <!-- Workspace -->
+          <tr class="tr-section">
+            <td class="td-sect-label">Workspace</td>
+            <td class="td-oh td-sect-oh"></td>
+            <td class="td-other"></td>
+            <td class="td-other"></td>
+          </tr>
+          <tr class="tr-data">
+            <td class="td-feat"><svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="2" x2="5" y2="10"/><circle cx="12" cy="4" r="2"/><circle cx="5" cy="13" r="2"/><path d="M12 6a6 6 0 01-6 6"/></svg>Team Workspace Sync<span class="tip" data-tip="Share rules and configs across your team — OpenHeaders does this via Git, others require cloud accounts"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.5 3.5a1.5 1.5 0 012.8.75c0 1-1.3 1.25-1.3 2.25"/><circle cx="5" cy="8" r=".5" fill="currentColor" stroke="none"/></svg></span></td>
+            <td class="td-oh"><Fragment set:html={yes} /><span class="cn">Via Git</span></td>
+            <td class="td-other"><Fragment set:html={partial} /><span class="cn">Cloud only</span></td>
+            <td class="td-other"><Fragment set:html={partial} /><span class="cn">Cloud only</span></td>
+          </tr>
+          <tr class="tr-data">
+            <td class="td-feat"><svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="4" width="13" height="9" rx="1"/><path d="M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1"/><line x1="1.5" y1="8" x2="14.5" y2="8"/></svg>Workspaces &amp; environments<span class="tip" data-tip="Separate project contexts with environment variables for staging, production, and local setups"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.5 3.5a1.5 1.5 0 012.8.75c0 1-1.3 1.25-1.3 2.25"/><circle cx="5" cy="8" r=".5" fill="currentColor" stroke="none"/></svg></span></td>
+            <td class="td-oh"><Fragment set:html={yes} /><span class="cn">Personal &amp; Team</span></td>
+            <td class="td-other"><Fragment set:html={partial} /><span class="cn">Cloud only</span></td>
+            <td class="td-other"><Fragment set:html={partial} /><span class="cn">Cloud only</span></td>
+          </tr>
+          <tr class="tr-data tr-last">
+            <td class="td-feat"><svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 5 2 2 14 2 14 5"/><line x1="8" y1="2" x2="8" y2="14"/><polyline points="5 11 2 14 5 14"/><line x1="8" y1="14" x2="14" y2="14"/></svg>API requests<span class="tip" data-tip="Send HTTP requests directly from the tool without leaving your workflow"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.5 3.5a1.5 1.5 0 012.8.75c0 1-1.3 1.25-1.3 2.25"/><circle cx="5" cy="8" r=".5" fill="currentColor" stroke="none"/></svg></span></td>
+            <td class="td-oh td-oh-last"><Fragment set:html={yes} /></td>
+            <td class="td-other td-other-last"><Fragment set:html={yes} /></td>
+            <td class="td-other td-other-last"><Fragment set:html={yes} /></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ── Animate-in ──────────────────────────────── */
+  .cmp-scroll {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .cmp-scroll.in-view { opacity: 1; transform: translateY(0); }
+  .cmp-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* ── Table reset ─────────────────────────────── */
+  .cmp-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    min-width: 520px; font-family: 'Inter', -apple-system, sans-serif;
+  }
+
+  /* ══ HEADER ══════════════════════════════════ */
+  .th-feat { padding: 0 0 16px; }
+
+  .th-oh {
+    padding: 12px 16px;
+    text-align: center; vertical-align: bottom;
+    font-size: 13px; font-weight: 700; color: var(--c-tx);
+    letter-spacing: -.01em;
+    background: var(--c-accentdim);
+    border-top: 2.5px solid var(--c-accent);
+    border-left: 1px solid var(--c-accentbd);
+    border-right: 1px solid var(--c-accentbd);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  .th-oh img {
+    display: inline-block; vertical-align: middle;
+    margin-right: 5px; margin-bottom: 1px;
+  }
+  .oh-badge {
+    display: inline-flex; align-items: center; margin-left: 5px;
+    padding: 2px 6px; border-radius: 100px;
+    background: var(--c-successdim); border: 1px solid var(--c-successbd);
+    font-size: 9px; font-weight: 600; letter-spacing: .04em;
+    color: var(--c-success); text-transform: uppercase;
+    vertical-align: middle; font-family: inherit;
+  }
+
+  .th-other {
+    padding: 0 16px 12px;
+    text-align: center; vertical-align: bottom;
+    font-size: 13px; font-weight: 600; color: var(--c-tx2);
+    letter-spacing: -.01em;
+    border-bottom: 1px solid var(--c-bd);
+  }
+
+  /* ══ OH CARD (continuous column) ════════════ */
+  .td-oh {
+    background: var(--c-accentdim);
+    border-left: 1px solid var(--c-accentbd);
+    border-right: 1px solid var(--c-accentbd);
+    text-align: center; vertical-align: middle;
+    padding: 6px 12px;
+  }
+  .td-oh-last {
+    border-bottom: 1px solid var(--c-accentbd);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding-bottom: 10px;
+  }
+
+  /* ══ OTHER CELLS ════════════════════════════ */
+  .td-other {
+    text-align: center; vertical-align: middle;
+    padding: 6px 12px;
+  }
+  .td-other-last { border-bottom: 1px solid var(--c-bd); }
+
+  /* ══ PRICE ROW ══════════════════════════════ */
+  .tr-price .td-feat { padding: 14px 0; }
+  .tr-price .td-oh   { padding: 14px 12px; }
+  .tr-price .td-other { padding: 14px 12px; border-bottom: 1px solid var(--c-bd); }
+
+  .price-free {
+    display: block;
+    font-size: 1.625rem; font-weight: 800; letter-spacing: -.05em;
+    color: var(--c-success); line-height: 1;
+  }
+  .price-free::after {
+    content: '/yr';
+    font-size: .6875rem; font-weight: 400; color: var(--c-success);
+    opacity: .6; letter-spacing: 0; margin-left: 2px;
+  }
+  .price-paid {
+    display: block;
+    font-size: 1.25rem; font-weight: 700; letter-spacing: -.04em;
+    color: var(--c-tx3); line-height: 1;
+  }
+  .price-paid::after {
+    content: '/yr';
+    font-size: .6875rem; font-weight: 400; color: var(--c-tx3);
+    opacity: .5; letter-spacing: 0; margin-left: 2px;
+  }
+
+  /* ══ SECTION LABELS ════════════════════════ */
+  .tr-section td {
+    background: var(--c-bg3);
+    border-top: 1px solid var(--c-bd);
+    border-bottom: 1px solid var(--c-bd);
+  }
+  .tr-section .td-oh {
+    background: var(--c-accentdim);
+    border-top: 1px solid var(--c-accentbd) !important;
+    border-bottom: 1px solid var(--c-accentbd) !important;
+  }
+  .tr-section .td-sect-label {
+    padding: 6px 0 6px 10px;
+    font-size: 10.5px; font-weight: 600; letter-spacing: .08em;
+    color: var(--c-tx2); text-transform: uppercase;
+  }
+  .tr-section .td-sect-oh  { padding: 4px 12px; }
+  .tr-section .td-other    { padding: 4px 12px; }
+
+  /* ══ DATA ROWS ══════════════════════════════ */
+  .td-feat {
+    padding: 6px 16px 6px 0;
+    font-size: 13px; font-weight: 400; color: var(--c-tx2);
+    vertical-align: middle; letter-spacing: -.005em;
+    transition: color .15s;
+  }
+  .td-feat-muted { font-size: 11.5px; color: var(--c-tx3); font-weight: 400; }
+
+  .tr-data td { border-top: 1px solid var(--c-bd); }
+  .tr-data .td-oh { border-top: 1px solid var(--c-accentbd); }
+  .tr-data:hover .td-feat { color: var(--c-tx); }
+  .tr-data:hover .td-feat,
+  .tr-data:hover .td-other { background: var(--c-bg3); }
+
+  /* ══ ICONS ══════════════════════════════════ */
+  /* set:html content bypasses Astro scoping — must use :global() */
+  :global(.ic) {
+    display: flex; justify-content: center; align-items: center;
+    line-height: 1;
+  }
+  :global(.ic) svg { display: block; flex-shrink: 0; }
+
+  /* Feature row prefix icons */
+  .fi {
+    display: inline-block; vertical-align: middle;
+    width: 13px; height: 13px; margin-right: 7px; margin-bottom: 1px;
+    color: var(--c-tx2); opacity: .5; flex-shrink: 0;
+  }
+
+  /* ══ INLINE NOTES ═══════════════════════════ */
+  :global(.cn) {
+    display: block; text-align: center;
+    font-size: 11px; font-weight: 400; color: var(--c-tx3);
+    letter-spacing: -.005em; margin-top: 2px;
+    white-space: nowrap;
+  }
+  .td-oh :global(.cn) { color: var(--c-accenthi); }
+
+  /* ══ SOON BADGE ═════════════════════════════ */
+  :global(.cmp-soon) {
+    display: inline-flex; align-items: center;
+    padding: 3px 10px; border-radius: 100px;
+    background: var(--c-accentdim); border: 1px solid var(--c-accentbd);
+    font-size: 11px; font-weight: 500; letter-spacing: .04em;
+    color: var(--c-accenthi); text-transform: uppercase;
+  }
+
+  /* ══ TOOLTIPS ═══════════════════════════════ */
+  .tip {
+    display: inline-flex; align-items: center; justify-content: center;
+    position: relative; margin-left: 5px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--c-bg4); border: 1px solid var(--c-bd);
+    color: var(--c-tx3); cursor: default;
+    vertical-align: middle; flex-shrink: 0;
+    transition: border-color .15s, color .15s;
+  }
+  .tip svg { display: block; }
+  .tip::after {
+    content: attr(data-tip);
+    position: absolute; left: 0; bottom: calc(100% + 8px);
+    background: var(--c-bg); border: 1px solid var(--c-bd);
+    color: var(--c-tx2); font-size: 11.5px; font-weight: 400;
+    line-height: 1.5; white-space: nowrap; letter-spacing: -.005em;
+    padding: 6px 10px; border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    pointer-events: none; opacity: 0;
+    transition: opacity .15s ease;
+    z-index: 100;
+  }
+  .tip::before {
+    content: '';
+    position: absolute; left: 3px; bottom: calc(100% + 3px);
+    border: 5px solid transparent;
+    border-top-color: var(--c-bd);
+    pointer-events: none; opacity: 0;
+    transition: opacity .15s ease;
+    z-index: 100;
+  }
+  /* show on row hover */
+  tr:hover .tip { border-color: var(--c-bd-hi); color: var(--c-tx2); }
+  tr:hover .tip::after, tr:hover .tip::before { opacity: 1; }
+
+  /* ── Responsive ──────────────────────────────── */
+  @media (max-width: 768px) {
+    .td-feat  { font-size: 13px; padding-right: 12px; }
+    .td-oh, .td-other { padding: 14px 10px; }
+    .price-free { font-size: 2rem; }
+    .price-paid { font-size: 1.5rem; }
+    .cn { display: none; }
+  }
+  @media (max-width: 500px) {
+    .cmp-table th:last-child, .cmp-table td:last-child { display: none; }
+  }
+</style>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.cmp-scroll').forEach(el => obs.observe(el));
+</script>

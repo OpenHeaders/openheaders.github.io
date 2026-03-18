@@ -1,0 +1,126 @@
+---
+import { Image } from 'astro:assets';
+import d0 from '../assets/screenshots/d0.png';
+---
+<!-- Hero section -->
+<section id="hero" class="hero relative z-[1] min-h-screen flex flex-col justify-center items-center pt-36 pb-20 px-7 text-center">
+  <!-- Glow -->
+  <div class="absolute top-[15%] left-1/2 -translate-x-1/2 w-[900px] h-[700px] pointer-events-none z-0" style="background:radial-gradient(ellipse at center, var(--c-glow) 0%, transparent 65%)"></div>
+
+  <!-- Heading -->
+  <h1 class="relative z-[1] font-display text-[clamp(2.25rem,5.5vw,4rem)] font-bold leading-[1.1] tracking-[-0.03em] text-tx mb-5 animate-fade-up [animation-delay:.08s]">
+    The open-source browser<br><span class="text-accent-hi">DevTools you're missing</span>
+  </h1>
+
+  <!-- Description -->
+  <p class="relative z-[1] text-[clamp(1.0625rem,2.2vw,1.25rem)] text-tx-2 font-normal max-w-[560px] mx-auto mb-9 leading-8 animate-fade-up [animation-delay:.18s] whitespace-nowrap">
+    Modify HTTP traffic, record browser sessions, team collaboration
+  </p>
+
+  <!-- CTA buttons -->
+  <div class="relative z-[1] flex items-start gap-3 flex-wrap justify-center mb-4 animate-fade-up [animation-delay:.28s]">
+    <!-- Desktop download -->
+    <div class="flex flex-col items-center gap-1.5">
+      <a id="hero-download" href="#download"
+         class="inline-flex items-center gap-2 px-7 py-3.5 rounded-sm bg-accent text-white border border-accent text-base font-medium no-underline whitespace-nowrap leading-none hover:bg-accent-hi hover:border-accent-hi hover:-translate-y-px transition-all" style="box-shadow:0 2px 8px var(--c-accentglo)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="flex flex-col gap-px text-left">
+          <span class="text-sm font-medium">Download Desktop App</span>
+          <span class="text-xs opacity-70 font-mono">Detecting platform&hellip;</span>
+        </span>
+      </a>
+      <span class="text-xs text-tx-3"><a id="hero-other-platforms" href="#download" class="text-tx-3 no-underline hover:text-accent-hi transition-colors">Other platforms &darr;</a></span>
+    </div>
+
+    <span class="text-sm text-tx-3 pt-3.5">+</span>
+
+    <!-- Browser extension -->
+    <div class="flex flex-col items-center gap-1.5">
+      <a id="hero-extension" href="#download"
+         class="inline-flex items-center gap-2 px-7 py-3.5 rounded-sm bg-transparent text-accent border text-base font-medium no-underline whitespace-nowrap leading-none transition-all" style="border-color:var(--c-accentbd)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+        <span class="flex flex-col gap-px text-left">
+          <span class="text-sm font-medium">Install Browser Extension</span>
+          <span class="text-xs opacity-70 font-mono">Detecting browser&hellip;</span>
+        </span>
+      </a>
+      <span class="text-xs text-tx-3"><a href="#download" class="text-tx-3 no-underline hover:text-accent-hi transition-colors">Chrome &middot; Edge &middot; Firefox &darr;</a></span>
+    </div>
+  </div>
+
+  <!-- Trust pills -->
+  <div class="relative z-[1] flex items-center gap-4 justify-center mt-2 animate-fade-up [animation-delay:.38s] flex-wrap">
+    <span class="inline-flex items-center gap-2 px-3 py-1 pl-2 bg-bg-3 border border-bd-hi rounded-full font-mono text-xs text-accent-hi">
+      <span class="w-[7px] h-[7px] bg-success rounded-full animate-blink" style="box-shadow:0 0 8px var(--c-success)"></span>
+      <span id="hero-version">open-source</span>
+    </span>
+    <span class="text-sm text-tx-3 opacity-30">&middot;</span>
+    <span class="flex items-center gap-1.5 text-[.8125rem] text-tx-2">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Code signed
+    </span>
+    <span class="text-sm text-tx-3 opacity-30">&middot;</span>
+    <span class="flex items-center gap-1.5 text-[.8125rem] text-tx-2">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Fully offline
+    </span>
+    <span class="text-sm text-tx-3 opacity-30">&middot;</span>
+    <span class="flex items-center gap-1.5 text-[.8125rem] text-tx-2">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+      MIT license
+    </span>
+    <span class="text-sm text-tx-3 opacity-30">&middot;</span>
+    <a href="https://docs.openheaders.io" target="_blank" rel="noopener noreferrer"
+       class="flex items-center gap-1.5 text-[.8125rem] text-accent no-underline hover:text-accent-hi transition-colors">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      Read the docs
+    </a>
+  </div>
+
+  <!-- App preview frame -->
+  <div class="mt-20 relative z-[1] max-w-[720px] w-full animate-fade-up [animation-delay:.5s]">
+    <div class="frame relative rounded-lg overflow-hidden border border-bd-hi" style="box-shadow:0 0 0 1px var(--c-accentdim), 0 40px 100px var(--c-shadowlg), 0 0 140px var(--c-glow)">
+      <!-- Title bar -->
+      <div class="bg-bg-3 border-b border-bd px-4 py-[11px] flex items-center gap-[7px]">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#FF5F57]"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-[#28C840]"></span>
+        <span class="ml-3 flex-1 bg-bg-2 border border-bd rounded px-2.5 py-[3px] font-mono text-xs text-tx-3 max-w-[280px]">openheaders://app &middot; HTTP Rules</span>
+      </div>
+      <Image src={d0} alt="OpenHeaders — HTTP Modification Rules" class="w-full block" loading="eager" />
+    </div>
+  </div>
+</section>
+
+<script>
+  (async () => {
+    try {
+      const res = await fetch('https://api.github.com/repos/OpenHeaders/open-headers-app/releases/latest');
+      const data = await res.json();
+      if (data.tag_name) {
+        const el = document.getElementById('hero-version');
+        if (el) el.textContent = data.tag_name;
+      }
+    } catch {}
+  })();
+
+  document.getElementById('hero-other-platforms')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.getElementById('download');
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Open the details after scroll lands
+    setTimeout(() => {
+      const details = document.querySelector<HTMLDetailsElement>('.dl-other');
+      if (details) details.open = true;
+    }, 500);
+  });
+</script>
+
+<style>
+  @media (max-width: 768px) {
+    .hero { padding: 110px 20px 60px; }
+    .hero h1 { font-size: 2rem; }
+    .hero .flex.items-start { flex-direction: column; align-items: center; }
+    .hero .text-sm.pt-3\.5 { display: none; }
+  }
+</style>

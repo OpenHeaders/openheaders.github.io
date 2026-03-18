@@ -1,0 +1,338 @@
+---
+import { Image } from 'astro:assets';
+import d1 from '../assets/screenshots/d1.png';
+import d2 from '../assets/screenshots/d2.png';
+import d3 from '../assets/screenshots/d3.png';
+import d4 from '../assets/screenshots/d4.png';
+import exportRecording from '../assets/screenshots/export-recording.png';
+---
+<!-- Features section -->
+<section class="py-28" id="features">
+  <div class="max-w-[1200px] mx-auto px-7 relative z-[1]">
+
+    <!-- Header -->
+    <div class="text-center mb-[72px]">
+      <div class="flex items-center gap-2 justify-center font-mono text-[.6875rem] font-medium text-accent uppercase tracking-[.12em] mb-2.5 before:content-['//'] before:opacity-50">capabilities</div>
+      <h2 class="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold tracking-tight text-tx leading-[1.1]">Everything you need to<br>own the network layer</h2>
+      <p class="text-tx-2 text-[1.0625rem] font-light max-w-[480px] mx-auto mt-4 leading-7">Built for developers who need deep visibility and control over browser HTTP traffic — without sending a single byte to the cloud.</p>
+    </div>
+
+    <!-- F1: HTTP Modification -->
+    <div class="feat">
+      <div class="feat-text">
+        <span class="feat-tag"><span class="feat-tag-dot"></span>core feature</span>
+        <h3>Intercept &amp; Modify HTTP Traffic</h3>
+        <p>Add, remove, or override request and response headers in real time. Inject values from environment files, local HTTP endpoints, or regex-matched patterns.</p>
+        <ul class="feat-bullets">
+          <li><span class="bdot"></span>Modify headers, payloads &amp; query params</li>
+          <li><span class="bdot"></span>Block or redirect requests by URL pattern</li>
+          <li><span class="bdot"></span>Inject scripts &amp; CSS into any page</li>
+          <li><span class="bdot"></span>Dynamic values from env / file / HTTP sources</li>
+          <li><span class="bdot"></span>Regex-based URL matching</li>
+        </ul>
+      </div>
+      <div class="feat-img">
+        <Image src={d1} alt="HTTP Modification Rules" loading="lazy" />
+      </div>
+    </div>
+
+    <!-- F2: Session Playback (horizontal split) -->
+    <div class="feat-hstack">
+      <div class="hstack-text">
+        <span class="feat-tag"><span class="feat-tag-dot"></span>session recording</span>
+        <h3>Record &amp; Replay Complete Sessions</h3>
+        <p>Capture every network request, console log, DOM event, and storage change — timestamped, seekable, and fully reproducible.</p>
+        <ul class="feat-bullets">
+          <li><span class="bdot"></span>One-click recording from the extension</li>
+          <li><span class="bdot"></span>Full timeline scrubbing &amp; playback controls</li>
+          <li><span class="bdot"></span>Console, Network, Storage &amp; Info tabs</li>
+          <li><span class="bdot"></span>Skip-inactive mode for long sessions</li>
+        </ul>
+      </div>
+      <div class="hstack-img">
+        <Image src={d4} alt="Session Playback" loading="lazy" />
+      </div>
+    </div>
+
+    <!-- F3: Record + Export duo -->
+    <div class="feat-duo">
+      <div class="duo-cell">
+        <span class="duo-tag">record</span>
+        <h3>Capture Workflows</h3>
+        <p>Attach recordings to bug reports, create onboarding demos, or document reproduction steps — all with full technical context preserved.</p>
+        <ul class="capture-pills">
+          <li><span class="cpill-icon">🔧</span>Console</li>
+          <li><span class="cpill-icon">🌐</span>Network</li>
+          <li><span class="cpill-icon">💾</span>Storage</li>
+          <li><span class="cpill-icon">🖱️</span>Mouse events</li>
+          <li><span class="cpill-icon">📊</span>Page metrics</li>
+        </ul>
+        <Image src={d3} alt="Record Workflow" class="duo-img" loading="lazy" />
+      </div>
+      <div class="duo-cell">
+        <span class="duo-tag">export</span>
+        <h3>Export in Any Format</h3>
+        <p>MP4 or WebM video for sharing. JSON for perfect programmatic reproduction — import back into OpenHeaders for instant replay.</p>
+        <Image src={exportRecording} alt="Export Options" class="duo-img" loading="lazy" />
+      </div>
+    </div>
+
+    <!-- F4: Team Workspaces (horizontal split) -->
+    <div class="feat-hstack">
+      <div class="hstack-text">
+        <span class="feat-tag"><span class="feat-tag-dot"></span>collaboration</span>
+        <h3>Team Workspaces via Git</h3>
+        <p>Sync rule sets and environments across your team using any Git repository. Sensitive values stay locally encrypted — only the structure travels.</p>
+        <ul class="feat-bullets">
+          <li><span class="bdot"></span>Git-based config synchronization</li>
+          <li><span class="bdot"></span>Branch-based workflow support</li>
+          <li><span class="bdot"></span>Invite teammates via shareable join links</li>
+          <li><span class="bdot"></span>Sensitive data stays locally encrypted</li>
+        </ul>
+      </div>
+      <div class="hstack-img">
+        <Image src={d2} alt="Team Workspaces" loading="lazy" />
+      </div>
+    </div>
+
+    <!-- F5: Trio — docs callout added -->
+    <div class="feat-trio">
+      <div class="trio-cell">
+        <div class="trio-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h4>Zero Telemetry</h4>
+        <p>No analytics, no crash reporting, no usage metrics. What you do stays on your machine, full stop.</p>
+      </div>
+      <div class="trio-cell">
+        <div class="trio-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+        </div>
+        <h4>Fully Open Source</h4>
+        <p>MIT licensed and fully transparent. Audit every line, fork it, extend it, or embed it in your own toolchain.</p>
+      </div>
+      <div class="trio-cell">
+        <div class="trio-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        </div>
+        <h4>Pro-Grade Docs</h4>
+        <p>Comprehensive <a href="https://docs.openheaders.io" target="_blank" rel="noopener noreferrer" class="docs-link">documentation</a> with guides, API reference, and examples.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ── Animate-in base ─────────────────────────── */
+  .feat, .feat-duo, .feat-trio, .feat-hstack {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity .7s ease, transform .7s ease, border-color .3s;
+  }
+  .feat.in-view, .feat-duo.in-view, .feat-trio.in-view, .feat-hstack.in-view {
+    opacity: 1; transform: translateY(0);
+  }
+
+  /* ── Full-width 2-col block ──────────────────── */
+  .feat {
+    display: grid; grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--c-bd); border-radius: 18px;
+    overflow: hidden; background: var(--c-bg2); margin-bottom: 14px;
+  }
+  .feat:hover { border-color: var(--c-bdhi); }
+  .feat.flip { direction: rtl; }
+  .feat.flip > * { direction: ltr; }
+
+  .feat-text {
+    padding: 56px 52px; display: flex; flex-direction: column; justify-content: center;
+    border-right: 1px solid var(--c-bd);
+  }
+  .feat.flip .feat-text { border-right: none; border-left: 1px solid var(--c-bd); }
+
+  .feat-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; background: var(--c-accentdim);
+    border: 1px solid var(--c-accentbd); border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace; font-size: .625rem; color: var(--c-accenthi);
+    margin-bottom: 20px; width: fit-content;
+    letter-spacing: .06em; text-transform: uppercase;
+  }
+  .feat-tag-dot { width: 5px; height: 5px; background: var(--c-accent); border-radius: 50%; }
+
+  .feat-text h3 {
+    font-family: 'Inter', -apple-system, sans-serif; font-size: 1.625rem; font-weight: 700;
+    letter-spacing: -.025em; color: var(--c-tx); margin-bottom: 14px; line-height: 1.2;
+  }
+  .feat-text > p {
+    color: var(--c-tx2); font-size: .9375rem; font-weight: 300; line-height: 1.75; margin-bottom: 28px;
+  }
+
+  .feat-bullets { list-style: none; display: flex; flex-direction: column; gap: 11px; padding: 0; }
+  .hstack-text .feat-bullets { display: grid; grid-template-columns: 1fr 1fr; gap: 11px 48px; }
+  .feat-bullets li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: .875rem; color: var(--c-tx2); font-weight: 300;
+  }
+  .bdot { width: 5px; height: 5px; background: var(--c-accent); border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+
+  .feat-img {
+    background: var(--c-bg3); display: flex; align-items: center;
+    justify-content: center; padding: 40px 32px; overflow: hidden; position: relative;
+  }
+  .feat-img::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, var(--c-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .feat-img img {
+    width: 100%; max-width: 480px; height: auto;
+    border-radius: 12px; border: 1px solid var(--c-bd);
+    box-shadow: 0 20px 60px var(--c-shadow), 0 0 40px var(--c-glow);
+    transition: transform .4s, box-shadow .4s; display: block;
+  }
+  .feat:hover .feat-img img {
+    transform: scale(1.02) translateY(-3px);
+    box-shadow: 0 28px 80px var(--c-shadowlg), 0 0 60px var(--c-glow);
+  }
+
+  /* ── Horizontal-split: text top, image bottom ── */
+  .feat-hstack {
+    display: flex; flex-direction: column;
+    border: 1px solid var(--c-bd); border-radius: 18px;
+    overflow: hidden; background: var(--c-bg2); margin-bottom: 14px;
+  }
+  .feat-hstack:hover { border-color: var(--c-bdhi); }
+
+  .hstack-text {
+    padding: 52px 56px 44px;
+    border-bottom: 1px solid var(--c-bd);
+    display: flex; flex-direction: column;
+  }
+  .hstack-text h3 {
+    font-family: 'Inter', -apple-system, sans-serif; font-size: 1.625rem; font-weight: 700;
+    letter-spacing: -.025em; color: var(--c-tx); margin-bottom: 14px; line-height: 1.2;
+  }
+  .hstack-text > p {
+    color: var(--c-tx2); font-size: .9375rem; font-weight: 300; line-height: 1.75; margin-bottom: 28px;
+  }
+
+  .hstack-img {
+    background: var(--c-bg3); padding: 40px 48px 48px; position: relative; overflow: hidden;
+  }
+  .hstack-img::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, var(--c-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hstack-img img {
+    width: 100%; height: auto; display: block;
+    border-radius: 12px; border: 1px solid var(--c-bd);
+    box-shadow: 0 20px 60px var(--c-shadow), 0 0 40px var(--c-glow);
+    transition: transform .4s, box-shadow .4s;
+  }
+  .feat-hstack:hover .hstack-img img {
+    transform: scale(1.01) translateY(-3px);
+    box-shadow: 0 28px 80px var(--c-shadowlg), 0 0 60px var(--c-glow);
+  }
+
+  /* ── 2-col equal cells ───────────────────────── */
+  .feat-duo {
+    display: grid; grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--c-bd); border-radius: 18px;
+    overflow: hidden; background: var(--c-bg2); margin-bottom: 14px;
+  }
+  .feat-duo:hover { border-color: var(--c-bdhi); }
+
+  .duo-cell { padding: 48px 44px; border-right: 1px solid var(--c-bd); }
+  .duo-cell:last-child { border-right: none; }
+
+  .duo-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; background: var(--c-accentdim);
+    border: 1px solid var(--c-accentbd); border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace; font-size: .625rem; color: var(--c-accenthi);
+    margin-bottom: 14px; width: fit-content;
+    letter-spacing: .06em; text-transform: uppercase;
+  }
+  .duo-cell h3 {
+    font-family: 'Inter', -apple-system, sans-serif; font-size: 1.375rem; font-weight: 700;
+    letter-spacing: -.025em; color: var(--c-tx); margin-bottom: 10px; line-height: 1.2;
+  }
+  .duo-cell p { color: var(--c-tx2); font-size: .875rem; font-weight: 300; line-height: 1.75; }
+
+  .capture-pills {
+    list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px;
+  }
+  .capture-pills li {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 100px;
+    background: var(--c-bg3); border: 1px solid var(--c-bd);
+    font-size: .75rem; font-weight: 400; color: var(--c-tx2);
+    font-family: 'JetBrains Mono', monospace; letter-spacing: .02em;
+  }
+  .cpill-icon { font-size: .8rem; line-height: 1; }
+
+  .duo-img {
+    width: 100%; height: auto; border-radius: 12px;
+    border: 1px solid var(--c-bdhi); box-shadow: 0 16px 40px var(--c-shadow);
+    margin-top: 28px; display: block;
+  }
+
+  /* ── 3-col strip ─────────────────────────────── */
+  .feat-trio {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--c-bd); border-radius: 18px;
+    overflow: hidden; background: var(--c-bg2); margin-bottom: 14px;
+  }
+  .feat-trio:hover { border-color: var(--c-bdhi); }
+
+  .trio-cell {
+    padding: 44px 36px; border-right: 1px solid var(--c-bd); transition: background .3s;
+  }
+  .trio-cell:hover { background: var(--c-bg3); }
+  .trio-cell:last-child { border-right: none; }
+
+  .trio-icon {
+    width: 36px; height: 36px; background: var(--c-accentdim);
+    border: 1px solid var(--c-accentbd); border-radius: 6px;
+    display: grid; place-items: center; margin-bottom: 18px; color: var(--c-accent);
+  }
+  .trio-cell h4 {
+    font-family: 'Inter', -apple-system, sans-serif; font-size: 1.125rem; font-weight: 700;
+    letter-spacing: -.02em; color: var(--c-tx); margin-bottom: 12px;
+  }
+  .trio-cell p { color: var(--c-tx2); font-size: .875rem; font-weight: 300; line-height: 1.7; }
+
+  .docs-link { color: var(--c-accent); text-decoration: none; font-weight: 500; }
+  .docs-link:hover { text-decoration: underline; }
+
+
+  /* ── Responsive ──────────────────────────────── */
+  @media (max-width: 768px) {
+    .feat, .feat-duo { grid-template-columns: 1fr; }
+    .feat.flip { direction: ltr; }
+    .feat-text { padding: 36px 28px; border-right: none !important; border-left: none !important; border-bottom: 1px solid var(--c-bd); }
+    .feat-img { padding: 28px 24px; }
+    .hstack-text { padding: 36px 28px 32px; }
+    .hstack-text .feat-bullets { grid-template-columns: 1fr; }
+    .hstack-img { padding: 24px 20px 28px; }
+    .duo-cell { padding: 36px 28px; border-right: none; border-bottom: 1px solid var(--c-bd); }
+    .duo-cell:last-child { border-bottom: none; }
+    .feat-trio { grid-template-columns: 1fr; }
+    .trio-cell { border-right: none; border-bottom: 1px solid var(--c-bd); }
+    .trio-cell:last-child { border-bottom: none; }
+  }
+  @media (max-width: 1024px) and (min-width: 769px) {
+    .feat-trio { grid-template-columns: 1fr 1fr; }
+    .trio-cell:nth-child(odd):last-child { grid-column: 1 / -1; border-right: none; }
+  }
+</style>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.feat, .feat-duo, .feat-trio, .feat-hstack').forEach(el => obs.observe(el));
+
+</script>

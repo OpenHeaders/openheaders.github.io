@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+import ogImageSrc from '../assets/screenshots/d1.png';
+
+interface Props {
+  title: string;
+  description?: string;
+  canonicalPath?: string;
+}
+
+const {
+  title,
+  description = 'Intercept HTTP traffic, record complete browser sessions, inject scripts and modify headers — entirely offline, zero telemetry.',
+  canonicalPath = '',
+} = Astro.props;
+
+const siteUrl = 'https://openheaders.io';
+const canonicalUrl = `${siteUrl}${canonicalPath}`;
+const ogImage = `${siteUrl}${ogImageSrc.src}`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalUrl} />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content={canonicalUrl} />
+  <meta property="og:site_name"   content="OpenHeaders" />
+  <meta property="og:title"       content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image"       content={ogImage} />
+  <meta property="og:image:alt"   content="OpenHeaders — HTTP interception and session recording for developers" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image"       content={ogImage} />
+
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Theme: apply saved preference before first paint to prevent flash -->
+  <script is:inline>
+    (function() {
+      const saved = localStorage.getItem('oh-theme');
+      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+<body class="font-body text-base leading-relaxed text-tx bg-bg overflow-x-hidden">
+  <slot />
+</body>
+</html>

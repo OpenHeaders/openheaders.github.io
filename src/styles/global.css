@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── LIGHT THEME (default) ─────────────────────────── */
+:root {
+  --c-bg:         #FFFFFF;
+  --c-bg2:        #F9FAFB;
+  --c-bg3:        #F3F4F6;
+  --c-bg4:        #E5E7EB;
+  --c-bd:         #E5E7EB;
+  --c-bdhi:       #D1D5DB;
+  --c-tx:         #111827;
+  --c-tx2:        #6B7280;
+  --c-tx3:        #9CA3AF;
+  --c-accent:     #2563EB;
+  --c-accenthi:   #3B82F6;
+  --c-accentdim:  rgba(37, 99, 235, .06);
+  --c-accentglo:  rgba(37, 99, 235, .12);
+  --c-accentbd:   rgba(37, 99, 235, .2);
+  --c-success:    #16A34A;
+  --c-successdim: rgba(22, 163, 74, .1);
+  --c-successbd:  rgba(22, 163, 74, .25);
+  --c-grid:       rgba(37, 99, 235, .03);
+  --c-glow:       rgba(37, 99, 235, .05);
+  --c-shadow:     rgba(0, 0, 0, .08);
+  --c-shadowlg:   rgba(0, 0, 0, .12);
+  --c-navbg:      rgba(255, 255, 255, .88);
+  --c-framebg:    linear-gradient(to bottom, transparent 55%, #FFFFFF 100%);
+}
+
+/* ── DARK THEME ────────────────────────────────────── */
+.dark {
+  --c-bg:         #07090E;
+  --c-bg2:        #0C1018;
+  --c-bg3:        #111620;
+  --c-bg4:        #161C28;
+  --c-bd:         #1E2536;
+  --c-bdhi:       #2A3448;
+  --c-tx:         #E2EAF4;
+  --c-tx2:        #7D8FA3;
+  --c-tx3:        #3A4556;
+  --c-accent:     #2F81F7;
+  --c-accenthi:   #5AA0FF;
+  --c-accentdim:  rgba(47, 129, 247, .1);
+  --c-accentglo:  rgba(47, 129, 247, .22);
+  --c-accentbd:   rgba(47, 129, 247, .2);
+  --c-success:    #3FB950;
+  --c-successdim: rgba(63, 185, 80, .15);
+  --c-successbd:  rgba(63, 185, 80, .3);
+  --c-grid:       rgba(47, 129, 247, .06);
+  --c-glow:       rgba(47, 129, 247, .1);
+  --c-shadow:     rgba(0, 0, 0, .5);
+  --c-shadowlg:   rgba(0, 0, 0, .7);
+  --c-navbg:      rgba(7, 9, 14, .88);
+  --c-framebg:    linear-gradient(to bottom, transparent 55%, #07090E 100%);
+}
+
+/* ── BASE STYLES ───────────────────────────────────── */
+html {
+  scroll-padding-top: 76px;
+  /* scroll-behavior: smooth is intentionally omitted — it makes all scrolling
+     (wheel, trackpad, keyboard) feel sluggish. Smooth scrolling is applied
+     via JS only on anchor-link clicks in Header.astro. */
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  background: var(--c-bg);
+  color: var(--c-tx);
+  transition: background .3s, color .3s;
+  background-image:
+    linear-gradient(var(--c-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--c-grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-attachment: fixed;
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--c-bg); }
+::-webkit-scrollbar-thumb { background: var(--c-bdhi); border-radius: 2px; }
+
+/* ── UTILITY ───────────────────────────────────────── */
+.icon-inverted {
+  filter: invert(1) brightness(2);
+  opacity: .6;
+}
+:root:not(.dark) .icon-inverted {
+  filter: none;
+  opacity: .8;
+}
+
+/* Icons inside accent (blue) buttons should always be white */
+#hero-download .icon-inverted,
+#primary-download .icon-inverted {
+  filter: invert(1) brightness(2);
+  opacity: 1;
+}

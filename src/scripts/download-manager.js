@@ -1,0 +1,127 @@
+import { detectBrowser, detectPlatform } from './platform-detection.js';
+
+let latestVersion = null;
+
+async function fetchLatestVersion() {
+  try {
+    const res = await fetch('https://api.github.com/repos/OpenHeaders/open-headers-app/releases/latest');
+    const data = await res.json();
+    latestVersion = data.tag_name.replace('v', '');
+    return latestVersion;
+  } catch (e) {
+    console.error('Failed to fetch latest version:', e);
+    return '3.0.0';
+  }
+}
+
+function getDownloadUrl(os, arch, variant) {
+  const v = latestVersion || '3.0.0';
+  const base = `https://github.com/OpenHeaders/open-headers-app/releases/download/v${v}/`;
+
+  const map = {
+    'mac-x64':              { url: `${base}OpenHeaders-${v}-mac-x64.dmg`,         name: 'macOS Intel',           icon: 'apple' },
+    'mac-arm64':            { url: `${base}OpenHeaders-${v}-mac-arm64.dmg`,       name: 'macOS Apple Silicon',   icon: 'apple' },
+    'windows-x64':          { url: `${base}OpenHeaders-${v}-Setup.exe`,           name: 'Windows with Git',      icon: 'windows' },
+    'windows-x64-nogit':    { url: `${base}OpenHeaders-${v}-Setup-NoGit.exe`,     name: 'Windows without Git',   icon: 'windows' },
+    'linux-appimage-x64':   { url: `${base}OpenHeaders-${v}-x64.AppImage`,        name: 'Linux AppImage x64',    icon: 'linux' },
+    'linux-appimage-arm64': { url: `${base}OpenHeaders-${v}-arm64.AppImage`,      name: 'Linux AppImage ARM64',  icon: 'linux' },
+    'linux-deb-x64':        { url: `${base}open-headers_${v}_amd64.deb`,          name: 'Debian/Ubuntu x64',     icon: 'linux' },
+    'linux-deb-arm64':      { url: `${base}open-headers_${v}_arm64.deb`,          name: 'Debian/Ubuntu ARM64',   icon: 'linux' },
+    'linux-rpm-x64':        { url: `${base}open-headers-${v}.x86_64.rpm`,         name: 'Fedora/RHEL x64',       icon: 'linux' },
+    'linux-rpm-arm64':      { url: `${base}open-headers-${v}.aarch64.rpm`,        name: 'Fedora/RHEL ARM64',     icon: 'linux' },
+  };
+
+  return map[variant || `${os}-${arch}`] || null;
+}
+
+function getAllDownloads() {
+  return [
+    getDownloadUrl('mac', 'arm64'),
+    getDownloadUrl('mac', 'x64'),
+    getDownloadUrl('windows', 'x64'),
+    getDownloadUrl('windows', 'x64', 'windows-x64-nogit'),
+    getDownloadUrl('linux-appimage', 'x64'),
+    getDownloadUrl('linux-appimage', 'arm64'),
+    getDownloadUrl('linux-deb', 'x64'),
+    getDownloadUrl('linux-deb', 'arm64'),
+    getDownloadUrl('linux-rpm', 'x64'),
+    getDownloadUrl('linux-rpm', 'arm64'),
+  ].filter(Boolean);
+}
+
+function iconImg(icon, lazy = false) {
+  const loading = lazy ? 'lazy' : 'eager';
+  const map = {
+    apple:   `<img src="/assets/icons/apple.svg" alt="Apple" width="18" height="18" class="icon-inverted" loading="${loading}">`,
+    windows: `<img src="/assets/icons/windows.svg" alt="Windows" width="18" height="18" class="icon-inverted" loading="${loading}">`,
+    linux:   `<img src="/assets/icons/linux.svg" alt="Linux" width="18" height="18" class="icon-inverted" loading="${loading}">`,
+  };
+  return map[icon] || '';
+}
+
+export async function displayDownloadOptions() {
+  await fetchLatestVersion();
+  const plat = detectPlatform();
+
+  let primary = null;
+  if (plat.os === 'mac') primary = getDownloadUrl('mac', plat.arch);
+  else if (plat.os === 'windows') primary = getDownloadUrl('windows', 'x64');
+  else if (plat.os.includes('linux')) {
+    if (plat.os === 'linux-deb') primary = getDownloadUrl('linux-deb', plat.arch);
+    else if (plat.os === 'linux-rpm') primary = getDownloadUrl('linux-rpm', plat.arch);
+    else primary = getDownloadUrl('linux-appimage', plat.arch);
+  }
+
+  // Hero download button
+  if (primary) {
+    const heroEl = document.getElementById('hero-download');
+    if (heroEl) {
+      heroEl.href = primary.url;
+      heroEl.innerHTML = `${iconImg(primary.icon)}<span class="flex flex-col gap-px text-left"><span class="text-sm font-medium">Download Desktop App</span><span class="text-[.6875rem] opacity-70 font-mono">${primary.name}</span></span>`;
+      heroEl.setAttribute('download', '');
+    }
+
+    // Primary download in section
+    const primaryEl = document.getElementById('primary-download');
+    if (primaryEl) {
+      const v = latestVersion || '3.0.0';
+      primaryEl.href = primary.url;
+      primaryEl.innerHTML = `${iconImg(primary.icon)}<span class="flex flex-col gap-px text-left"><span class="text-sm font-medium">Download for ${primary.name}</span><span class="text-[.6875rem] opacity-70 font-mono">${v}</span></span>`;
+      primaryEl.setAttribute('download', '');
+    }
+  }
+
+  // Hero extension button
+  const browser = detectBrowser();
+  const extEl = document.getElementById('hero-extension');
+  if (extEl && browser) {
+    if (browser.unsupported) {
+      // Safari or unsupported browser — show "coming soon" state
+      extEl.removeAttribute('href');
+      extEl.style.opacity = '.6';
+      extEl.style.cursor = 'default';
+      extEl.innerHTML = `<img src="${browser.icon}" alt="${browser.name}" width="18" height="18" loading="eager"><span class="flex flex-col gap-px text-left"><span class="text-sm font-medium">Browser Extension</span><span class="text-[.6875rem] opacity-70 font-mono">${browser.name}</span></span>`;
+    } else {
+      extEl.href = browser.url;
+      extEl.innerHTML = `<img src="${browser.icon}" alt="${browser.name}" width="18" height="18" loading="eager"><span class="flex flex-col gap-px text-left"><span class="text-sm font-medium">Install Browser Extension</span><span class="text-[.6875rem] opacity-70 font-mono">${browser.name}</span></span>`;
+      extEl.setAttribute('target', '_blank');
+      extEl.setAttribute('rel', 'noopener noreferrer');
+    }
+  }
+
+  // All downloads dropdown
+  const allDl = getAllDownloads();
+  const otherEl = document.getElementById('other-downloads');
+  if (otherEl) {
+    const v = latestVersion || '3.0.0';
+    otherEl.innerHTML = allDl.map(opt =>
+      `<a href="${opt.url}" class="download-option" download>
+        <div class="info">
+          ${iconImg(opt.icon, true).replace(/width="18"/g, 'width="16"').replace(/height="18"/g, 'height="16"')}
+          <span class="name">${opt.name}</span>
+        </div>
+        <span class="size">${v}</span>
+      </a>`
+    ).join('');
+  }
+}

@@ -2,72 +2,132 @@
 import Base from '../layouts/Base.astro';
 import { Image } from 'astro:assets';
 import logo from '../assets/logo.svg';
-import layersIcon from '../assets/icons/layers.svg';
 ---
 
 <Base title="Join Team Workspace — OpenHeaders" description="Join a team workspace in OpenHeaders">
-  <div class="join-container">
-    <div class="join-card">
-      <div class="text-center mb-6">
-        <div class="flex items-center justify-center gap-2 mb-4">
-          <Image src={logo} alt="OpenHeaders" width={32} height={32} loading="eager" />
-          <span class="font-display font-bold text-lg text-tx">OpenHeaders</span>
-        </div>
-        <h1 class="font-display text-[1.75rem] font-bold text-tx mb-1">Join Team Workspace</h1>
-        <p class="text-tx-2">You've been invited to collaborate</p>
+  <div class="join-wrap">
+    <div class="join-card" id="join-card">
+
+      <!-- Header -->
+      <div class="join-header">
+        <Image src={logo} alt="OpenHeaders" width={32} height={32} loading="eager" class="rounded-sm" />
+        <span class="brand">OpenHeaders</span>
       </div>
 
-      <div id="workspace-info" class="workspace-details"></div>
-
-      <div id="no-app-section">
-        <div id="download-section" class="action-section">
-          <h3 class="text-[.9375rem] font-semibold text-tx mb-3">Download OpenHeaders for <span id="detected-os"></span></h3>
-          <div class="text-center">
-            <a id="primary-download" href="#" class="btn-primary-join">
-              <img id="primary-icon" src="" alt="" width="18" height="18" loading="eager" />
-              <span>
-                <span class="text-sm font-medium">Download Desktop App</span>
-                <span class="text-[.6875rem] opacity-70 font-mono" id="primary-text"></span>
-              </span>
-            </a>
-          </div>
-
-          <details class="dl-other mt-3">
-            <summary>Other download options</summary>
-            <div id="other-downloads" class="dl-list"></div>
-          </details>
-
-          <details class="dl-other mt-2">
-            <summary>Installation instructions</summary>
-            <div id="install-instructions" class="install-instructions"></div>
-          </details>
+      <!-- Progress -->
+      <div id="step-progress" class="progress" style="display:none">
+        <div class="progress-step" data-step="invite">
+          <span class="progress-dot"></span>
+          <span class="progress-label">Invite</span>
+        </div>
+        <span class="progress-arrow">›</span>
+        <div class="progress-step" data-step="install">
+          <span class="progress-dot"></span>
+          <span class="progress-label">Install</span>
+        </div>
+        <span class="progress-arrow">›</span>
+        <div class="progress-step" data-step="join">
+          <span class="progress-dot"></span>
+          <span class="progress-label">Join</span>
         </div>
 
-        <div class="h-px bg-bd my-5"></div>
+      </div>
 
-        <div class="text-center">
-          <button class="already-installed-btn" id="already-installed-btn">
-            <Image src={layersIcon} alt="App" width={18} height={18} loading="lazy" />
-            <span>I already have OpenHeaders installed</span>
+      <!-- Step: invite -->
+      <div id="step-invite" class="step" style="display:none">
+        <div class="invite-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <p class="invite-label">You've been invited to join</p>
+        <h1 class="invite-name" id="workspace-name"></h1>
+        <p class="invite-by" id="invite-by"></p>
+
+        <div id="app-detected-badge" class="app-detected-badge" style="display:none">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          App detected
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-primary" id="btn-need-install">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download &amp; Join
           </button>
+          <button class="btn-ghost" id="btn-open-app">I already have OpenHeaders installed</button>
         </div>
       </div>
 
-      <div id="has-app-section" class="success-section">
-        <p>
-          <svg class="inline-block align-middle mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          OpenHeaders detected!
-        </p>
-        <a href="#" class="btn-primary-join" id="open-in-app-btn">Open in OpenHeaders</a>
+      <!-- Step: opening -->
+      <div id="step-opening" class="step" style="display:none">
+        <div class="spinner"></div>
+        <h2 class="step-title">Opening OpenHeaders…</h2>
+        <p class="step-sub">Check if a dialog appeared in your browser asking to open the app.</p>
+        <div class="step-actions" style="margin-top:2rem">
+          <button class="btn-ghost" id="btn-open-retry">Try again</button>
+          <button class="btn-ghost small" id="btn-not-installed">App not installed? Download it</button>
+        </div>
       </div>
 
-      <div class="text-center mt-6 text-[.8125rem] text-tx-2">
-        Privacy-first, <a href="https://github.com/OpenHeaders" target="_blank" rel="noopener noreferrer" class="text-accent no-underline hover:underline">open source</a> browser toolkit
+      <!-- Step: success -->
+      <div id="step-success" class="step" style="display:none">
+        <div class="success-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2 class="step-title">You're in!</h2>
+        <p class="step-sub">The workspace is opening in OpenHeaders. You can close this tab.</p>
+      </div>
+
+      <!-- Step: download / install -->
+      <div id="step-download" class="step" style="display:none">
+        <h2 class="step-title">Install OpenHeaders</h2>
+
+        <a id="primary-download" href="https://github.com/OpenHeaders/open-headers-app/releases/latest" class="btn-primary dl-btn" download>
+          <img id="primary-icon" src="/assets/icons/apple.svg" alt="" width="18" height="18" style="filter:brightness(0) invert(1)" />
+          <span class="dl-btn-text">
+            <span class="dl-btn-main">Download Desktop App</span>
+            <span class="dl-btn-sub" id="primary-text">Detecting platform…</span>
+          </span>
+        </a>
+
+        <details class="dl-other">
+          <summary>Other platforms &amp; architectures</summary>
+          <div id="other-downloads" class="dl-list"></div>
+        </details>
+
+        <div id="install-steps" class="install-steps"></div>
+
+        <button class="btn-primary" id="btn-installed-next" style="margin-top:1rem">
+          I've installed it — Continue
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <!-- Step: join -->
+      <div id="step-join" class="step" style="display:none">
+        <h2 class="step-title">Join Workspace</h2>
+        <p class="step-sub">OpenHeaders is installed and running. Click below to join the workspace.</p>
+        <button class="btn-primary" id="btn-open-after-install">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Join Workspace
+        </button>
+      </div>
+
+      <!-- Step: error -->
+      <div id="step-error" class="step" style="display:none">
+        <div class="error-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <h2 class="step-title">Invalid invite</h2>
+        <p class="step-sub" id="error-msg">This invite link is invalid or has expired.</p>
+        <a href="https://openheaders.io" class="btn-ghost" style="margin-top:1.5rem;display:inline-flex">Go to openheaders.io</a>
+      </div>
+
+      <div class="join-footer">
+        Privacy-first, <a href="https://github.com/OpenHeaders" target="_blank" rel="noopener noreferrer">open source</a> browser toolkit
       </div>
     </div>
   </div>
 
-  <!-- Pako for gzip compression -->
+  <!-- Pako for gzip decompression -->
   <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <script>
@@ -75,6 +135,25 @@ import layersIcon from '../assets/icons/layers.svg';
 
     let inviteData: Record<string, any> | null = null;
     let latestVersion: string | null = null;
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    function show(id: string) {
+      document.querySelectorAll('.step').forEach(s => ((s as HTMLElement).style.display = 'none'));
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'block';
+    }
+
+    function setProgress(active: string, done: string[] = []) {
+      const prog = document.getElementById('step-progress');
+      if (!prog) return;
+      prog.style.display = 'flex';
+      prog.querySelectorAll<HTMLElement>('.progress-step').forEach(s => {
+        const key = s.dataset.step!;
+        s.classList.toggle('is-active', key === active);
+        s.classList.toggle('is-done', done.includes(key));
+      });
+    }
 
     function buildProtocolUrl(data: Record<string, any>) {
       const payload = { version: '3.0.0', action: 'team-invite', data };
@@ -88,6 +167,27 @@ import layersIcon from '../assets/icons/layers.svg';
         const b64 = btoa(JSON.stringify(payload)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
         return `openheaders://open?payload=${b64}`;
       }
+    }
+
+    // ── Version & downloads ──────────────────────────────────────────────────
+
+    async function fetchLatestVersion() {
+      const CACHE_KEY = 'oh-latest-version';
+      const CACHE_TTL = 60 * 60 * 1000;
+      try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const { version, ts } = JSON.parse(cached);
+          if (Date.now() - ts < CACHE_TTL && version) { latestVersion = version; return; }
+        }
+        const res = await fetch('https://api.github.com/repos/OpenHeaders/open-headers-app/releases/latest');
+        const data = await res.json();
+        if (data.tag_name) {
+          latestVersion = data.tag_name.replace('v', '');
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ version: latestVersion, ts: Date.now() }));
+        }
+      } catch {}
+      if (!latestVersion) latestVersion = '3.4.1';
     }
 
     function getDownloadUrl(os: string, arch: string, variant?: string) {
@@ -109,82 +209,26 @@ import layersIcon from '../assets/icons/layers.svg';
       return map[variant || `${os}-${arch}`] || null;
     }
 
-    function getAllDownloads() {
-      return [
-        getDownloadUrl('mac', 'arm64'), getDownloadUrl('mac', 'x64'),
-        getDownloadUrl('windows', 'x64'), getDownloadUrl('windows', 'x64', 'windows-x64-nogit'),
-        getDownloadUrl('linux-appimage', 'x64'), getDownloadUrl('linux-appimage', 'arm64'),
-        getDownloadUrl('linux-deb', 'x64'), getDownloadUrl('linux-deb', 'arm64'),
-        getDownloadUrl('linux-rpm', 'x64'), getDownloadUrl('linux-rpm', 'arm64'),
-      ].filter(Boolean);
-    }
-
-    function getInstallInstructions(platform: string) {
-      const certUrl = latestVersion
-        ? `https://github.com/OpenHeaders/open-headers-app/releases/download/v${latestVersion}/open-headers-ca.crt`
-        : 'https://github.com/OpenHeaders/open-headers-app/releases/latest';
-      const map: Record<string, string> = {
-        windows: `<h4>Installation Steps for Windows</h4><div class="warning-box"><strong>Certificate Required:</strong> You must install the certificate first.</div><ol><li><strong>Download & Install Certificate:</strong> <a href="${certUrl}" target="_blank">open-headers-ca.crt</a> — install to "Trusted Root Certification Authorities"</li><li><strong>Run the installer</strong></li><li><strong>Launch</strong> from Start menu</li></ol>`,
-        mac: `<h4>Installation Steps for macOS</h4><ol><li>Open the downloaded .dmg file</li><li>Drag OpenHeaders to Applications</li><li>Launch from Applications or Spotlight</li></ol>`,
-        'linux-appimage': `<h4>Installation Steps for Linux (AppImage)</h4><ol><li><code>chmod +x OpenHeaders-*.AppImage</code></li><li><code>sudo ./install-open-headers.sh</code></li><li>Launch from application menu</li></ol>`,
-        'linux-deb': `<h4>Installation Steps for Debian/Ubuntu</h4><ol><li><code>sudo apt install ./open-headers_*.deb</code></li><li>Launch from application menu</li></ol>`,
-        'linux-rpm': `<h4>Installation Steps for Fedora/RHEL</h4><ol><li><code>sudo rpm -i open-headers-*.rpm</code></li><li>Launch from application menu</li></ol>`,
-        linux: `<h4>Installation Steps for Linux</h4><ul><li><strong>AppImage:</strong> Universal, no install</li><li><strong>.deb:</strong> Debian/Ubuntu</li><li><strong>.rpm:</strong> Fedora/RHEL</li></ul>`,
+    function renderInstallSteps(os: string) {
+      const steps: Record<string, string[]> = {
+        mac:             ['Open the .dmg file', 'Drag & drop OpenHeaders → Applications', 'Launch from Applications'],
+        windows:         ['Double-click the installer', 'App installs & launches automatically'],
+        'linux-appimage':['chmod +x OpenHeaders-*.AppImage', 'Run: sudo ./install-open-headers.sh', 'Launch from app menu'],
+        'linux-deb':     ['sudo apt install ./open-headers_*.deb', 'Launch from app menu'],
+        'linux-rpm':     ['sudo rpm -i open-headers-*.rpm', 'Launch from app menu'],
+        linux:           ['Make executable & run installer', 'Launch from app menu'],
       };
-      return map[platform] || map.linux;
+      const list = steps[os] || steps.linux;
+      const stepsHtml = list.map((s, i) =>
+        `<div class="is-item"><span class="is-num">${i + 1}</span><span class="is-label">${s}</span></div>${i < list.length - 1 ? '<div class="is-arrow">↓</div>' : ''}`
+      ).join('');
+      const el = document.getElementById('install-steps');
+      if (el) el.innerHTML = `<div class="is-row">${stepsHtml}</div>`;
     }
 
-    async function fetchLatestVersion() {
-      const CACHE_KEY = 'oh-latest-version';
-      const CACHE_TTL = 60 * 60 * 1000; // 1 hour
-      try {
-        const cached = localStorage.getItem(CACHE_KEY);
-        if (cached) {
-          const { version, ts } = JSON.parse(cached);
-          if (Date.now() - ts < CACHE_TTL && version) { latestVersion = version; return; }
-        }
-        const res = await fetch('https://api.github.com/repos/OpenHeaders/open-headers-app/releases/latest');
-        const data = await res.json();
-        if (data.tag_name) {
-          latestVersion = data.tag_name.replace('v', '');
-          localStorage.setItem(CACHE_KEY, JSON.stringify({ version: latestVersion, ts: Date.now() }));
-        }
-      } catch {}
-      if (!latestVersion) latestVersion = '3.4.1';
-    }
-
-    function escapeHtml(text: string) {
-      const div = document.createElement('div');
-      div.textContent = text || '';
-      return div.innerHTML;
-    }
-
-    function displayError(msg: string) {
-      document.querySelector('.join-card')!.innerHTML = `
-        <div class="flex items-center justify-center gap-2 mb-8">
-          <img src="/logo.svg" alt="OpenHeaders" width="40" height="40" loading="eager" />
-          <span class="font-display font-bold text-xl text-tx">OpenHeaders</span>
-        </div>
-        <div class="text-center py-12">
-          <h2 class="font-display text-xl font-bold text-tx mb-4">Invalid Invite</h2>
-          <p class="text-tx-2 mb-8">${escapeHtml(msg)}</p>
-          <a href="https://openheaders.io" class="btn-primary-join">Visit OpenHeaders</a>
-        </div>`;
-    }
-
-    function displayWorkspaceInfo(data: any) {
-      document.getElementById('workspace-info')!.innerHTML = `
-        <h2 class="text-base font-semibold text-tx mb-3"><span class="text-tx-2 font-normal">Name:</span> ${escapeHtml(data.workspaceName)}</h2>
-        <div class="detail-row"><span class="detail-label">Repository:</span><span class="detail-value">${escapeHtml(data.repoUrl)}</span></div>
-        <div class="detail-row"><span class="detail-label">Branch:</span><span class="detail-value">${escapeHtml(data.branch || 'main')}</span></div>
-        <div class="detail-row"><span class="detail-label">Config Path:</span><span class="detail-value">${escapeHtml(data.configPath || 'config/open-headers.json')}</span></div>
-        ${data.inviterName ? `<div class="detail-row"><span class="detail-label">Invited by:</span><span class="detail-value">${escapeHtml(data.inviterName)}</span></div>` : ''}`;
-    }
-
-    async function displayDownloadOptions() {
-      await fetchLatestVersion();
+    async function populateDownloads() {
       const plat = await detectPlatform();
-      document.getElementById('detected-os')!.textContent = plat.display;
+      await fetchLatestVersion();
 
       let primary = null;
       if (plat.os === 'mac') primary = getDownloadUrl('mac', plat.arch);
@@ -198,87 +242,152 @@ import layersIcon from '../assets/icons/layers.svg';
       if (primary) {
         const btn = document.getElementById('primary-download') as HTMLAnchorElement;
         const icon = document.getElementById('primary-icon') as HTMLImageElement;
-        const text = document.getElementById('primary-text')!;
         btn.href = primary.url;
-        icon.src = primary.icon;
-        icon.classList.add('brightness-0', 'invert');
-        text.innerHTML = `${primary.name}${latestVersion ? ` <span class="opacity-60">${latestVersion}</span>` : ''}`;
         btn.setAttribute('download', '');
+        icon.src = primary.icon;
+        document.getElementById('primary-text')!.textContent = `${primary.name}${latestVersion ? ` · v${latestVersion}` : ''}`;
       }
 
-      const all = getAllDownloads().filter((d): d is NonNullable<typeof d> => !!d && (!primary || d.url !== primary.url));
+      renderInstallSteps(plat.os);
+
+      const all = [
+        getDownloadUrl('mac', 'arm64'), getDownloadUrl('mac', 'x64'),
+        getDownloadUrl('windows', 'x64'), getDownloadUrl('windows', 'x64', 'windows-x64-nogit'),
+        getDownloadUrl('linux-appimage', 'x64'), getDownloadUrl('linux-appimage', 'arm64'),
+        getDownloadUrl('linux-deb', 'x64'), getDownloadUrl('linux-deb', 'arm64'),
+        getDownloadUrl('linux-rpm', 'x64'), getDownloadUrl('linux-rpm', 'arm64'),
+      ].filter((d): d is NonNullable<typeof d> => !!d && (!primary || d.url !== primary.url));
+
       document.getElementById('other-downloads')!.innerHTML = all.map(opt =>
         `<a href="${opt.url}" class="download-option" download>
-          <div class="info"><img src="${opt.icon}" alt="${opt.name}" width="16" height="16" loading="lazy"><span class="name">${opt.name}</span></div>
-          ${latestVersion ? `<span class="size">${latestVersion}</span>` : ''}
+          <div class="info"><img src="${opt.icon}" alt="" width="16" height="16" class="icon-inverted" loading="lazy"><span class="name">${opt.name}</span>${latestVersion ? `<span class="size">${latestVersion}</span>` : ''}</div>
         </a>`
       ).join('');
+    }
 
-      document.getElementById('download-section')!.classList.add('section-visible');
+    // ── App open flow ────────────────────────────────────────────────────────
 
-      let ip = plat.os;
-      if (ip === 'linux' && primary) {
-        if (primary.name.includes('AppImage')) ip = 'linux-appimage';
-        else if (primary.name.includes('Debian')) ip = 'linux-deb';
-        else if (primary.name.includes('Fedora')) ip = 'linux-rpm';
-      }
-      document.getElementById('install-instructions')!.innerHTML = getInstallInstructions(ip);
+    function silentProbe() {
+      if (!inviteData) return;
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = buildProtocolUrl(inviteData);
+
+      const onBlur = () => {
+        cleanup();
+        // App detected — promote "Open in app" to primary
+        const btnOpen = document.getElementById('btn-open-app');
+        const btnInstall = document.getElementById('btn-need-install');
+        if (btnOpen) { btnOpen.className = 'btn-primary'; btnOpen.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg> Open in OpenHeaders'; }
+        if (btnInstall) { btnInstall.className = 'btn-ghost'; btnInstall.innerHTML = 'Download instead'; }
+        const badge = document.getElementById('app-detected-badge');
+        if (badge) badge.style.display = 'flex';
+      };
+      const cleanup = () => {
+        window.removeEventListener('blur', onBlur);
+        clearTimeout(timer);
+        iframe.remove();
+      };
+      const timer = setTimeout(cleanup, 1500);
+      window.addEventListener('blur', onBlur);
+      document.body.appendChild(iframe);
     }
 
     function tryOpenApp() {
       if (!inviteData) return;
-      window.location.href = buildProtocolUrl(inviteData);
-    }
-
-    function checkIfAppInstalled() {
-      if (!inviteData) return;
+      show('step-opening');
+      setProgress('join', ['invite', 'install']);
       const url = buildProtocolUrl(inviteData);
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = url;
 
-      const handleBlur = () => {
-        document.getElementById('no-app-section')!.style.display = 'none';
-        document.getElementById('has-app-section')!.style.display = 'block';
-        window.removeEventListener('blur', handleBlur);
-        iframe.remove();
+      const onBlur = () => {
+        cleanup();
+        show('step-success');
+        setProgress('join', ['invite', 'install', 'join']);
       };
+      const cleanup = () => {
+        window.removeEventListener('blur', onBlur);
+        clearTimeout(timer);
+      };
+      const timer = setTimeout(cleanup, 2000);
+      window.addEventListener('blur', onBlur);
 
-      window.addEventListener('blur', handleBlur);
-      setTimeout(() => { window.removeEventListener('blur', handleBlur); iframe.remove(); }, 1500);
-      document.body.appendChild(iframe);
+      window.location.href = url;
     }
+
+    // ── Init ─────────────────────────────────────────────────────────────────
 
     function init() {
       const params = new URLSearchParams(window.location.search);
       const payloadParam = params.get('payload');
-      if (!payloadParam) { displayError('No invite found'); return; }
+      if (!payloadParam) { showError('No invite found in this link.'); return; }
 
       try {
-        let decoded;
+        let decoded: any;
         try {
-          const compressed = Uint8Array.from(atob(payloadParam.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
-          decoded = JSON.parse((window as any).pako.ungzip(compressed, { to: 'string' }));
+          const bytes = Uint8Array.from(atob(payloadParam.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+          decoded = JSON.parse((window as any).pako.ungzip(bytes, { to: 'string' }));
         } catch {
           try { decoded = JSON.parse(atob(payloadParam)); } catch { throw new Error('Invalid format'); }
         }
 
-        if (decoded.action !== 'team-invite' || !decoded.data) { displayError('Invalid invite'); return; }
+        if (decoded.action !== 'team-invite' || !decoded.data) { showError('This invite is not valid.'); return; }
         inviteData = decoded.data;
-        if (!inviteData?.workspaceName || !inviteData?.repoUrl) { displayError('Invalid invite'); return; }
+        if (!inviteData?.workspaceName || !inviteData?.repoUrl) { showError('This invite is missing required data.'); return; }
 
-        displayWorkspaceInfo(inviteData);
-        displayDownloadOptions();
-        checkIfAppInstalled();
+        // Populate invite step
+        document.getElementById('workspace-name')!.textContent = inviteData.workspaceName;
+        const inviteBy = document.getElementById('invite-by')!;
+        if (inviteData.inviterName) {
+          inviteBy.textContent = `Invited by ${inviteData.inviterName}`;
+        } else {
+          inviteBy.style.display = 'none';
+        }
 
-        document.getElementById('already-installed-btn')?.addEventListener('click', tryOpenApp);
-        document.getElementById('open-in-app-btn')?.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (inviteData) window.location.href = buildProtocolUrl(inviteData);
+        show('step-invite');
+        setProgress('invite');
+
+        // Silently probe for app
+        silentProbe();
+
+        // Wire up buttons
+        document.getElementById('btn-open-app')?.addEventListener('click', tryOpenApp);
+
+        document.getElementById('btn-need-install')?.addEventListener('click', () => {
+          show('step-download');
+          setProgress('install', ['invite']);
+          populateDownloads();
         });
+
+        document.getElementById('btn-open-retry')?.addEventListener('click', () => {
+          const btn = document.getElementById('btn-open-retry') as HTMLButtonElement;
+          const orig = btn.textContent;
+          btn.textContent = 'Retrying…';
+          btn.disabled = true;
+          setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 2000);
+          tryOpenApp();
+        });
+
+        document.getElementById('btn-not-installed')?.addEventListener('click', () => {
+          show('step-download');
+          setProgress('install', ['invite']);
+          populateDownloads();
+        });
+
+        document.getElementById('btn-installed-next')?.addEventListener('click', () => {
+          show('step-join');
+          setProgress('join', ['invite', 'install']);
+        });
+
+        document.getElementById('btn-open-after-install')?.addEventListener('click', tryOpenApp);
+
       } catch {
-        displayError('Invalid invite');
+        showError('This invite link appears to be invalid or corrupted.');
       }
+    }
+
+    function showError(msg: string) {
+      document.getElementById('error-msg')!.textContent = msg;
+      show('step-error');
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
@@ -287,77 +396,169 @@ import layersIcon from '../assets/icons/layers.svg';
 </Base>
 
 <style>
-  .join-container {
-    max-width: 700px; margin: 0 auto; padding: 2rem 20px;
+  .join-wrap {
     min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 2rem 1.25rem;
   }
   .join-card {
-    background: var(--c-bg); border: 1px solid var(--c-bdhi); border-radius: 18px;
-    padding: 2rem; width: 100%; max-height: calc(100vh - 4rem); overflow-y: auto;
-    box-shadow: 0 20px 60px var(--c-shadow);
+    width: 100%; max-width: 440px;
+    background: var(--c-bg2); border: 1px solid var(--c-bdhi);
+    border-radius: 20px; padding: 2rem;
+    box-shadow: 0 24px 64px var(--c-shadow);
   }
-  .workspace-details {
-    background: var(--c-bg2); border: 1px solid var(--c-bd); border-radius: 12px;
-    padding: 1rem; margin-bottom: 1.5rem;
+
+  /* Header */
+  .join-header {
+    display: flex; align-items: center; justify-content: center;
+    gap: .5rem; margin-bottom: 2rem;
   }
-  .detail-row { display: flex; margin-bottom: .5rem; font-size: .875rem; }
-  .detail-row:last-child { margin-bottom: 0; }
-  .detail-label { min-width: 100px; color: var(--c-tx2); font-weight: 500; }
-  .detail-value { color: var(--c-tx); word-break: break-all; }
+  .brand { font-family: var(--font-display); font-weight: 700; font-size: .9375rem; color: var(--c-tx); }
 
-  .action-section { margin-bottom: 1rem; display: none; }
-  .section-visible { display: block !important; }
-  .section-hidden { display: none !important; }
+  /* Progress indicator */
+  .progress {
+    display: flex; align-items: center; justify-content: center;
+    gap: .5rem; margin-bottom: 1.75rem;
+  }
+  .progress-step { display: flex; align-items: center; gap: .375rem; }
+  .progress-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--c-bd); border: 1.5px solid var(--c-bd);
+    transition: all .3s;
+  }
+  .progress-label { font-size: .75rem; color: var(--c-tx3); font-weight: 500; transition: color .3s; }
+  .progress-arrow { color: var(--c-bd); font-size: .875rem; line-height: 1; }
 
-  .btn-primary-join {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 10px 20px; border-radius: 6px;
+  .progress-step.is-active .progress-dot { background: var(--c-accent); border-color: var(--c-accent); box-shadow: 0 0 0 3px var(--c-accentdim); }
+  .progress-step.is-active .progress-label { color: var(--c-accent); }
+  .progress-step.is-done .progress-dot { background: var(--c-success); border-color: var(--c-success); }
+  .progress-step.is-done .progress-label { color: var(--c-tx2); }
+  .progress-step.is-done + .progress-arrow { color: var(--c-tx3); }
+
+  /* Steps */
+  .step { animation: fadeIn .2s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* Invite step */
+  .invite-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    background: var(--c-accentdim); border: 1px solid var(--c-accentbd);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.25rem; color: var(--c-accent);
+  }
+  .invite-label { text-align: center; font-size: .8125rem; color: var(--c-tx2); margin-bottom: .375rem; }
+  .invite-name { text-align: center; font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--c-tx); margin-bottom: .5rem; }
+  .invite-by { text-align: center; font-size: .875rem; color: var(--c-tx2); margin-bottom: 2rem; }
+
+  /* Step titles */
+  .step-title {
+    font-family: var(--font-display); font-size: 1.125rem; font-weight: 700;
+    color: var(--c-tx); margin-bottom: .5rem; display: flex; align-items: center; gap: .625rem;
+  }
+  .step-num {
+    width: 24px; height: 24px; border-radius: 50%; background: var(--c-accent);
+    color: #fff; font-size: .75rem; font-weight: 700; font-family: var(--font-mono);
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .step-sub { font-size: .875rem; color: var(--c-tx2); margin-bottom: 1.5rem; line-height: 1.6; }
+
+  /* Buttons */
+  .step-actions { display: flex; flex-direction: column; gap: .75rem; }
+  .btn-primary {
+    display: flex; align-items: center; justify-content: center; gap: .625rem;
+    padding: .75rem 1.25rem; border-radius: 8px;
     background: var(--c-accent); color: #fff; border: 1px solid var(--c-accent);
-    font-size: .875rem; font-weight: 500; text-decoration: none;
-    cursor: pointer; transition: all .2s;
+    font-size: .9375rem; font-weight: 500; text-decoration: none; cursor: pointer;
+    transition: all .2s; width: 100%; box-sizing: border-box;
   }
-  .btn-primary-join:hover { background: var(--c-accenthi); border-color: var(--c-accenthi); }
-
-  .already-installed-btn {
-    padding: .75rem 1.25rem; background: transparent; color: var(--c-tx);
-    border: 2px solid var(--c-bd); border-radius: 6px; font-size: .875rem;
-    font-weight: 500; cursor: pointer; transition: all .3s;
-    display: inline-flex; align-items: center; gap: .5rem; min-width: 280px;
-    justify-content: center;
+  .btn-primary:hover { background: var(--c-accenthi); border-color: var(--c-accenthi); transform: translateY(-1px); }
+  .btn-ghost {
+    display: flex; align-items: center; justify-content: center; gap: .5rem;
+    padding: .625rem 1rem; border-radius: 8px;
+    background: transparent; color: var(--c-tx2); border: 1px solid var(--c-bd);
+    font-size: .875rem; font-weight: 500; cursor: pointer; transition: all .2s;
+    text-decoration: none; width: 100%; box-sizing: border-box;
   }
-  .already-installed-btn:hover { border-color: var(--c-accent); color: var(--c-accent); background: var(--c-bg2); }
-  .btn-error { border-color: #ef4444 !important; color: #ef4444 !important; }
+  .btn-ghost:hover { border-color: var(--c-bdhi); color: var(--c-tx); }
+  .btn-ghost.small { font-size: .8125rem; padding: .5rem .875rem; color: var(--c-tx3); border-color: transparent; }
+  .btn-ghost.small:hover { color: var(--c-tx2); border-color: var(--c-bd); }
 
-  .success-section { display: none; text-align: center; padding: 1.5rem; background: var(--c-successdim); border: 1px solid var(--c-successbd); border-radius: 12px; }
-  .success-section p { margin-bottom: 1rem; color: var(--c-success); font-weight: 500; }
+  /* Download button */
+  .dl-btn { text-align: left; justify-content: flex-start; margin-bottom: 1rem; }
+  .dl-btn-text { display: flex; flex-direction: column; gap: 2px; }
+  .dl-btn-main { font-size: .9375rem; font-weight: 500; }
+  .dl-btn-sub { font-size: .75rem; opacity: .7; font-family: var(--font-mono); }
 
-  .dl-other summary { cursor: pointer; list-style: none; color: var(--c-accent); font-size: .875rem; font-weight: 500; user-select: none; display: inline-flex; align-items: center; gap: .5rem; }
+  /* Other downloads */
+  .dl-other { margin-bottom: 1rem; }
+  .dl-other summary { cursor: pointer; list-style: none; color: var(--c-accent); font-size: .8125rem; font-weight: 500; user-select: none; display: inline-flex; align-items: center; gap: .375rem; }
   .dl-other summary::-webkit-details-marker { display: none; }
-  .dl-other summary::before { content: '\25B6'; display: inline-block; transition: transform .2s; font-size: .5rem; }
+  .dl-other summary::before { content: '\25B6'; display: inline-block; transition: transform .2s; font-size: .45rem; }
   .dl-other[open] summary::before { transform: rotate(90deg); }
-  .dl-list { margin-top: .75rem; display: grid; gap: .375rem; max-height: 150px; overflow-y: auto; }
-
-  .download-option {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: .625rem .875rem; background: var(--c-bg2); border: 1px solid var(--c-bd);
-    border-radius: 6px; text-decoration: none; color: var(--c-tx); font-size: .875rem; transition: all .2s;
+  .dl-list { margin-top: .625rem; display: flex; flex-direction: column; gap: .25rem; }
+  :global(.download-option) {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 9px 12px; background: var(--c-bg3); border: 1px solid var(--c-bd);
+    border-radius: 6px; text-decoration: none; color: var(--c-tx2);
+    font-size: .8125rem; transition: all .2s; font-weight: 300;
   }
-  .download-option:hover { border-color: var(--c-accent); background: var(--c-bg3); }
-  .download-option .info { display: flex; align-items: center; gap: .5rem; }
-  .download-option .name { font-weight: 500; }
-  .download-option .size { color: var(--c-tx2); font-size: .8125rem; }
+  :global(.download-option:hover) { border-color: var(--c-bdhi); color: var(--c-tx); background: var(--c-bg4); }
+  :global(.download-option .info) { display: flex; align-items: center; gap: 8px; }
+  :global(.download-option .name) { font-weight: 500; color: var(--c-tx); }
+  :global(.download-option .size) { font-family: 'JetBrains Mono', monospace; font-size: .6875rem; color: var(--c-tx3); }
 
-  .install-instructions { background: var(--c-accentdim); border: 1px solid var(--c-accentbd); border-radius: 12px; padding: 1rem; margin-top: .75rem; }
-  .install-instructions :global(h4) { font-size: .9375rem; margin-bottom: .75rem; color: var(--c-tx); font-weight: 600; }
-  .install-instructions :global(ol) { padding-left: 1.5rem; }
-  .install-instructions :global(li) { margin-bottom: .375rem; color: var(--c-tx); font-size: .875rem; }
-  .install-instructions :global(code) { background: var(--c-bg); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: .875rem; border: 1px solid var(--c-bd); }
-  .warning-box { background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.3); padding: .75rem; margin-bottom: .75rem; border-radius: 6px; color: #FEBC2E; font-size: .875rem; }
-
-  @media (max-width: 768px) {
-    .join-container { padding: 1rem; }
-    .join-card { padding: 1.5rem 1.25rem; }
-    .detail-row { flex-direction: column; gap: .125rem; }
-    .detail-label { min-width: unset; }
+  /* Install steps */
+  .install-steps { margin: 1rem 0 .5rem; }
+  :global(.is-row) {
+    display: flex; flex-direction: column; gap: 0;
+    background: var(--c-bg3); border: 1px solid var(--c-bd);
+    border-radius: 8px; padding: .75rem 1rem;
   }
+  :global(.is-item) { display: flex; align-items: center; gap: .5rem; }
+  :global(.is-num) {
+    background: var(--c-accent); color: #fff; border-radius: 50%;
+    width: 18px; height: 18px; font-size: 10px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  :global(.is-label) { font-size: .8125rem; color: var(--c-tx); font-weight: 500; }
+  :global(.is-arrow) { color: var(--c-tx3); font-size: .875rem; width: 18px; text-align: center; padding: .15rem 0; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--c-bd); margin: 1.5rem 0; }
+
+  /* Opening spinner */
+  .spinner {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 3px solid var(--c-bd); border-top-color: var(--c-accent);
+    animation: spin .8s linear infinite; margin: 0 auto 1.25rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Success */
+  .success-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--c-successdim); border: 1px solid var(--c-successbd);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.25rem; color: var(--c-success);
+  }
+  .step-title.success { color: var(--c-success); }
+
+  /* Error */
+  .error-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.25);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.25rem; color: #ef4444;
+  }
+
+  /* App detected badge */
+  .app-detected-badge {
+    display: flex; align-items: center; justify-content: center; gap: .375rem;
+    font-size: .8125rem; font-weight: 500; color: var(--c-success);
+    margin-bottom: 1rem;
+  }
+
+  /* Footer */
+  .join-footer { margin-top: 1.75rem; text-align: center; font-size: .8125rem; color: var(--c-tx3); }
+  .join-footer a { color: var(--c-accent); text-decoration: none; }
+  .join-footer a:hover { text-decoration: underline; }
 </style>

@@ -155,8 +155,8 @@ export async function displayDownloadOptions() {
         <div class="info">
           ${iconImg(opt.icon, true).replace(/width="18"/g, 'width="16"').replace(/height="18"/g, 'height="16"')}
           <span class="name">${opt.name}</span>
+          ${latestVersion ? `<span class="size">${latestVersion}</span>` : ''}
         </div>
-        ${latestVersion ? `<span class="size">${latestVersion}</span>` : ''}
       </a>`
     ).join('');
   }

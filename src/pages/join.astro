@@ -150,6 +150,7 @@ import layersIcon from '../assets/icons/layers.svg';
           localStorage.setItem(CACHE_KEY, JSON.stringify({ version: latestVersion, ts: Date.now() }));
         }
       } catch {}
+      if (!latestVersion) latestVersion = '3.4.1';
     }
 
     function escapeHtml(text: string) {

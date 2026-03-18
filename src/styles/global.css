@@ -83,7 +83,7 @@ body {
 
 /* ── UTILITY ───────────────────────────────────────── */
 .icon-inverted {
-  filter: invert(1) brightness(2);
+  filter: brightness(0) invert(1);
   opacity: .6;
 }
 :root:not(.dark) .icon-inverted {
@@ -94,6 +94,6 @@ body {
 /* Icons inside accent (blue) buttons should always be white */
 #hero-download .icon-inverted,
 #primary-download .icon-inverted {
-  filter: invert(1) brightness(2);
+  filter: brightness(0) invert(1);
   opacity: 1;
 }

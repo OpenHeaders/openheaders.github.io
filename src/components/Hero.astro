@@ -111,10 +111,9 @@ import d0 from '../assets/screenshots/d0.png';
           localStorage.setItem(CACHE_KEY, JSON.stringify({ version, ts: Date.now() }));
         }
       }
-      if (version) {
-        const el = document.getElementById('hero-version');
-        if (el) el.textContent = `v${version}`;
-      }
+      if (!version) version = '3.4.1';
+      const el = document.getElementById('hero-version');
+      if (el) el.textContent = `v${version}`;
     } catch {}
   })();
 

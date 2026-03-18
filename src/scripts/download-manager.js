@@ -2,6 +2,8 @@ import { detectBrowser, detectPlatform } from './platform-detection.js';
 
 let latestVersion = null;
 
+const FALLBACK_VERSION = '3.4.1';
+
 async function fetchLatestVersion() {
   const CACHE_KEY = 'oh-latest-version';
   const CACHE_TTL = 60 * 60 * 1000; // 1 hour
@@ -21,6 +23,7 @@ async function fetchLatestVersion() {
       localStorage.setItem(CACHE_KEY, JSON.stringify({ version: latestVersion, ts: Date.now() }));
     }
   } catch {}
+  if (!latestVersion) latestVersion = FALLBACK_VERSION;
 }
 
 function getDownloadUrl(os, arch, variant) {

@@ -91,7 +91,8 @@ import layersIcon from '../assets/icons/layers.svg';
     }
 
     function getDownloadUrl(os: string, arch: string, variant?: string) {
-      const v = latestVersion || '3.0.0';
+      if (!latestVersion) return null;
+      const v = latestVersion;
       const base = `https://github.com/OpenHeaders/open-headers-app/releases/download/v${v}/`;
       const map: Record<string, { url: string; name: string; icon: string }> = {
         'mac-x64':              { url: `${base}OpenHeaders-${v}-mac-x64.dmg`,     name: 'macOS Intel',          icon: '/assets/icons/apple.svg' },
@@ -119,8 +120,9 @@ import layersIcon from '../assets/icons/layers.svg';
     }
 
     function getInstallInstructions(platform: string) {
-      const v = latestVersion || '3.0.0';
-      const certUrl = `https://github.com/OpenHeaders/open-headers-app/releases/download/v${v}/open-headers-ca.crt`;
+      const certUrl = latestVersion
+        ? `https://github.com/OpenHeaders/open-headers-app/releases/download/v${latestVersion}/open-headers-ca.crt`
+        : 'https://github.com/OpenHeaders/open-headers-app/releases/latest';
       const map: Record<string, string> = {
         windows: `<h4>Installation Steps for Windows</h4><div class="warning-box"><strong>Certificate Required:</strong> You must install the certificate first.</div><ol><li><strong>Download & Install Certificate:</strong> <a href="${certUrl}" target="_blank">open-headers-ca.crt</a> — install to "Trusted Root Certification Authorities"</li><li><strong>Run the installer</strong></li><li><strong>Launch</strong> from Start menu</li></ol>`,
         mac: `<h4>Installation Steps for macOS</h4><ol><li>Open the downloaded .dmg file</li><li>Drag OpenHeaders to Applications</li><li>Launch from Applications or Spotlight</li></ol>`,
@@ -133,11 +135,21 @@ import layersIcon from '../assets/icons/layers.svg';
     }
 
     async function fetchLatestVersion() {
+      const CACHE_KEY = 'oh-latest-version';
+      const CACHE_TTL = 60 * 60 * 1000; // 1 hour
       try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const { version, ts } = JSON.parse(cached);
+          if (Date.now() - ts < CACHE_TTL && version) { latestVersion = version; return; }
+        }
         const res = await fetch('https://api.github.com/repos/OpenHeaders/open-headers-app/releases/latest');
         const data = await res.json();
-        latestVersion = data.tag_name.replace('v', '');
-      } catch { latestVersion = '3.0.0'; }
+        if (data.tag_name) {
+          latestVersion = data.tag_name.replace('v', '');
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ version: latestVersion, ts: Date.now() }));
+        }
+      } catch {}
     }
 
     function escapeHtml(text: string) {
@@ -170,7 +182,7 @@ import layersIcon from '../assets/icons/layers.svg';
 
     async function displayDownloadOptions() {
       await fetchLatestVersion();
-      const plat = detectPlatform();
+      const plat = await detectPlatform();
       document.getElementById('detected-os')!.textContent = plat.display;
 
       let primary = null;
@@ -189,17 +201,15 @@ import layersIcon from '../assets/icons/layers.svg';
         btn.href = primary.url;
         icon.src = primary.icon;
         icon.classList.add('brightness-0', 'invert');
-        const v = latestVersion || '3.0.0';
-        text.innerHTML = `${primary.name} <span class="opacity-60">${v}</span>`;
+        text.innerHTML = `${primary.name}${latestVersion ? ` <span class="opacity-60">${latestVersion}</span>` : ''}`;
         btn.setAttribute('download', '');
       }
 
-      const all = getAllDownloads().filter(d => !primary || d.url !== primary.url);
-      const v = latestVersion || '3.0.0';
+      const all = getAllDownloads().filter((d): d is NonNullable<typeof d> => !!d && (!primary || d.url !== primary.url));
       document.getElementById('other-downloads')!.innerHTML = all.map(opt =>
         `<a href="${opt.url}" class="download-option" download>
           <div class="info"><img src="${opt.icon}" alt="${opt.name}" width="16" height="16" loading="lazy"><span class="name">${opt.name}</span></div>
-          <span class="size">${v}</span>
+          ${latestVersion ? `<span class="size">${latestVersion}</span>` : ''}
         </a>`
       ).join('');
 

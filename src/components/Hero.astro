@@ -44,7 +44,7 @@ import d0 from '../assets/screenshots/d0.png';
           <span class="text-xs opacity-70 font-mono">Detecting browser&hellip;</span>
         </span>
       </a>
-      <span class="text-xs text-tx-3"><a href="#download" class="text-tx-3 no-underline hover:text-accent-hi transition-colors">Chrome &middot; Edge &middot; Firefox &darr;</a></span>
+      <span class="text-xs text-tx-3"><a href="#download" class="text-tx-3 no-underline hover:text-accent-hi transition-colors">Other browsers &darr;</a></span>
     </div>
   </div>
 
@@ -94,12 +94,26 @@ import d0 from '../assets/screenshots/d0.png';
 
 <script>
   (async () => {
+    const CACHE_KEY = 'oh-latest-version';
+    const CACHE_TTL = 60 * 60 * 1000; // 1 hour
     try {
-      const res = await fetch('https://api.github.com/repos/OpenHeaders/open-headers-app/releases/latest');
-      const data = await res.json();
-      if (data.tag_name) {
+      const cached = localStorage.getItem(CACHE_KEY);
+      let version = null;
+      if (cached) {
+        const { version: v, ts } = JSON.parse(cached);
+        if (Date.now() - ts < CACHE_TTL && v) version = v;
+      }
+      if (!version) {
+        const res = await fetch('https://api.github.com/repos/OpenHeaders/open-headers-app/releases/latest');
+        const data = await res.json();
+        if (data.tag_name) {
+          version = data.tag_name.replace('v', '');
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ version, ts: Date.now() }));
+        }
+      }
+      if (version) {
         const el = document.getElementById('hero-version');
-        if (el) el.textContent = data.tag_name;
+        if (el) el.textContent = `v${version}`;
       }
     } catch {}
   })();

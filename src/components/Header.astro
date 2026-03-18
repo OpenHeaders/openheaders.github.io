@@ -135,10 +135,23 @@ import logo from '../assets/logo.svg';
 
   // Fetch GitHub stars
   (async () => {
+    const CACHE_KEY = 'oh-gh-stars';
+    const CACHE_TTL = 60 * 60 * 1000; // 1 hour
     try {
-      const res = await fetch('https://api.github.com/repos/OpenHeaders/open-headers-app');
-      const data = await res.json();
-      const count = data.stargazers_count;
+      const cached = localStorage.getItem(CACHE_KEY);
+      let count = null;
+      if (cached) {
+        const { stars, ts } = JSON.parse(cached);
+        if (Date.now() - ts < CACHE_TTL && stars != null) count = stars;
+      }
+      if (count == null) {
+        const res = await fetch('https://api.github.com/repos/OpenHeaders/open-headers-app');
+        const data = await res.json();
+        if (data.stargazers_count != null) {
+          count = data.stargazers_count;
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ stars: count, ts: Date.now() }));
+        }
+      }
       if (count != null) {
         const fmt = count >= 1000 ? (count / 1000).toFixed(1).replace(/\.0$/, '') + 'k' : String(count);
         document.querySelectorAll('#gh-star-count').forEach(el => { el.textContent = fmt; });

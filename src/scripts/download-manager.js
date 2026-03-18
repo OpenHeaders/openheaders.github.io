@@ -3,19 +3,29 @@ import { detectBrowser, detectPlatform } from './platform-detection.js';
 let latestVersion = null;
 
 async function fetchLatestVersion() {
+  const CACHE_KEY = 'oh-latest-version';
+  const CACHE_TTL = 60 * 60 * 1000; // 1 hour
   try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const { version, ts } = JSON.parse(cached);
+      if (Date.now() - ts < CACHE_TTL && version) {
+        latestVersion = version;
+        return;
+      }
+    }
     const res = await fetch('https://api.github.com/repos/OpenHeaders/open-headers-app/releases/latest');
     const data = await res.json();
-    latestVersion = data.tag_name.replace('v', '');
-    return latestVersion;
-  } catch (e) {
-    console.error('Failed to fetch latest version:', e);
-    return '3.0.0';
-  }
+    if (data.tag_name) {
+      latestVersion = data.tag_name.replace('v', '');
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ version: latestVersion, ts: Date.now() }));
+    }
+  } catch {}
 }
 
 function getDownloadUrl(os, arch, variant) {
-  const v = latestVersion || '3.0.0';
+  if (!latestVersion) return null;
+  const v = latestVersion;
   const base = `https://github.com/OpenHeaders/open-headers-app/releases/download/v${v}/`;
 
   const map = {
@@ -84,9 +94,8 @@ export async function displayDownloadOptions() {
     // Primary download in section
     const primaryEl = document.getElementById('primary-download');
     if (primaryEl) {
-      const v = latestVersion || '3.0.0';
       primaryEl.href = primary.url;
-      primaryEl.innerHTML = `${iconImg(primary.icon)}<span class="flex flex-col gap-px text-left"><span class="text-sm font-medium">Download for ${primary.name}</span><span class="text-[.6875rem] opacity-70 font-mono">${v}</span></span>`;
+      primaryEl.innerHTML = `${iconImg(primary.icon)}<span class="flex flex-col gap-px text-left"><span class="text-sm font-medium">Download for ${primary.name}</span>${latestVersion ? `<span class="text-[.6875rem] opacity-70 font-mono">${latestVersion}</span>` : ''}</span>`;
       primaryEl.setAttribute('download', '');
     }
   }
@@ -114,14 +123,13 @@ export async function displayDownloadOptions() {
   const allDl = getAllDownloads();
   const otherEl = document.getElementById('other-downloads');
   if (otherEl) {
-    const v = latestVersion || '3.0.0';
     otherEl.innerHTML = allDl.map(opt =>
       `<a href="${opt.url}" class="download-option" download>
         <div class="info">
           ${iconImg(opt.icon, true).replace(/width="18"/g, 'width="16"').replace(/height="18"/g, 'height="16"')}
           <span class="name">${opt.name}</span>
         </div>
-        <span class="size">${v}</span>
+        ${latestVersion ? `<span class="size">${latestVersion}</span>` : ''}
       </a>`
     ).join('');
   }
